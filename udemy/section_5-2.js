@@ -223,3 +223,28 @@ function countUniqueValues(sortedArray) {
 
   return lastUniqueIndex + 1;
 }
+
+/**
+ * @해결법2 - Refactoring
+ */
+function countUniqueValues(sortedArray) {
+  let indexOfLastUniqueValue = 0;
+
+  if (!sortedArray.length) return 0;
+
+  for (
+    let currentIndex = 1;
+    currentIndex < sortedArray.length;
+    currentIndex++
+  ) {
+    if (sortedArray[indexOfLastUniqueValue] !== sortedArray[currentIndex]) {
+      ++indexOfLastUniqueValue;
+
+      if (indexOfLastUniqueValue < currentIndex) {
+        sortedArray[indexOfLastUniqueValue] = sortedArray[currentIndex];
+      }
+    }
+  }
+
+  return indexOfLastUniqueValue + 1;
+}
