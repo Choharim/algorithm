@@ -1,5 +1,6 @@
 /**
  * @문제해결패턴 - Multiple Pointers
+ * 두개의 포인터를 같은 방향이든 반대방향이든 움직이며 비교 범위를 줄여가거나 구해야 하는 값을 기억할 수 있다.
  */
 
 /**
@@ -199,7 +200,8 @@ function countUniqueValues(sortedArray) {
  * 공간 복잡도 O(1)
  * 두개의 pointer를 둔다
  * 왼쪽에는 유니크한 값만 모으고 가장 마지막 유니크 값의 index를 저장한다.
- * 오른 쪽에는 비교값으로 왼쪽 pointer와 같은 값이면 다음으로 이동하고 다른 값이면 왼쪽 포인터 바로 다음값으로 비교값을 이동시킨다.
+ * 오른 쪽에는 비교값으로 왼쪽 pointer와 다른 값이면 왼쪽 포인터 바로 다음값으로 비교값을 이동시킨다.
+ * 결국 왼쪽 pointer 포함한 왼쪽 부분은 유니크한 값만 존재하고 왼쪽 포인터 초과 ~ 오른쪽 포인터 미만까지는 중복된 값만 존재하고 오른쪽 포인터 부터는 앞으로 확인할 대상만 남게된다.
  */
 function countUniqueValues(sortedArray) {
   let lastUniqueIndex = 0;
@@ -209,11 +211,11 @@ function countUniqueValues(sortedArray) {
 
   while (currentCompareIndex < sortedArray.length) {
     if (sortedArray[lastUniqueIndex] !== sortedArray[currentCompareIndex]) {
-      if (currentCompareIndex + 1 > lastUniqueIndex) {
-        sortedArray[lastUniqueIndex + 1] = sortedArray[currentCompareIndex];
-      }
-
       ++lastUniqueIndex;
+
+      if (currentCompareIndex > lastUniqueIndex) {
+        sortedArray[lastUniqueIndex] = sortedArray[currentCompareIndex];
+      }
     }
 
     ++currentCompareIndex;
@@ -221,7 +223,3 @@ function countUniqueValues(sortedArray) {
 
   return lastUniqueIndex + 1;
 }
-console.log(countUniqueValues([1, 1, 1, 1, 1, 2])); // 2
-console.log(countUniqueValues([1, 2, 3, 4, 4, 4, 5, 5, 12, 12, 13])); // 7
-console.log(countUniqueValues([])); // 0
-console.log(countUniqueValues([-2, -1, -1, 0, 1])); // 4
