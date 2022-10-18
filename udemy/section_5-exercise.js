@@ -246,81 +246,36 @@ function maxSubarraySum(sortedArray, count) {
 /**
  * @해결
  * 주어진 숫자 이상의 값을 만들 수 있는 최소한의 갯수로 이루어진 양수의 조합을 구하자.
- * 먼저 주어진 값을 넘는 수의 합을 구하고 오른쪽으로 이동하면서 추가할 숫자1개의 값과 (현재의 합 - 최소 합) 즉 ,여유 값의 합이
- * 제거되는 숫자들의 합보다 크거나 같으면 기준 점은 빠지는 값만큼 이동한다.
+ * 두개의 pointer를 두고 범위를 지정한다. 처음에는 0,0
+ * 주어진 값보다 합이 작으면 오른쪽 범위를 늘린다.
+ * 주어진 값보다 합이 크거나 같으면 왼쪽 범위를 움직여 전체 범위를 좁히고 합계를 줄인다. 이때 내 요소 갯수가 현재 minCount보다 작으면 minCount를 업데이트한다.
+ * 이를 반복한다.
  */
-
 function minSubArrayLen(array, num) {
-  let minCount = 0;
-  let sum = 0;
+  let minCount = Infinity;
+  let startIndex = 0;
+  let endIndex = 0;
+  let sum = array[0];
 
-  while (sum < num) {
-    sum += array[minCount];
-    minCount++;
-  }
-
-  for (let index = 1; index < array.length; index++) {
-    const gap = -array[index - 1] + sum - num;
-    if (gap === 0) {
-      sum += -array[index - 1];
-      minCount--;
-    } else if (gap > 0) {
-    } else {
-      let j = minCount;
-      let additionalSum = 0;
-      while (gap > additionalSum) {
-        additionalSum += array[minCount];
-
-        j++;
+  while (startIndex < array.length) {
+    if (sum < num) {
+      ++endIndex;
+      if (endIndex === array.length) {
+        break;
       }
 
-      minCount = j;
-      sum += additionalSum;
+      sum += array[endIndex];
+    } else if (sum >= num) {
+      minCount = Math.min(minCount, endIndex - startIndex + 1);
+
+      sum += -array[startIndex];
+      ++startIndex;
     }
   }
-
-  return minCount;
+  return minCount === Infinity ? 0 : minCount;
 }
-
-function minSubArrayLen(nums, sum) {
-  let total = 0;
-  let start = 0;
-  let end = 0;
-  let minLen = Infinity;
-
-  while (start < nums.length) {
-    // if current window doesn't add up to the given sum then
-    // move the window to right
-    if (total < sum && end < nums.length) {
-      total += nums[end];
-      end++;
-    }
-    // if current window adds up to at least the sum given then
-    // we can shrink the window
-    else if (total >= sum) {
-      minLen = Math.min(minLen, end - start);
-      total -= nums[start];
-      start++;
-    }
-    // current total less than required total but we reach the end, need this or else we'll be in an infinite loop
-    else {
-      break;
-    }
-  }
-
-  return minLen === Infinity ? 0 : minLen;
-}
-
-console.log(minSubArrayLen([2, 3, 1, 2, 4, 3], 7)); // 2 -> because [4,3] is the smallest subarray
-console.log(minSubArrayLen([2, 1, 6, 5, 4], 9)); // 2 -> because [5,4] is the smallest subarray
-console.log(minSubArrayLen([3, 1, 7, 11, 2, 9, 8, 21, 62, 33, 19], 52)); // 1 -> because [62] is greater than 52
-console.log(minSubArrayLen([1, 4, 16, 22, 5, 7, 8, 9, 10], 39)); // 3
-console.log(minSubArrayLen([1, 4, 16, 22, 5, 7, 8, 9, 10], 55)); // 5
-console.log(minSubArrayLen([4, 3, 3, 8, 1, 2, 3], 11)); // 2
-console.log(minSubArrayLen([1, 4, 16, 22, 5, 7, 8, 9, 10], 95)); // 0);
 
 /**
- * @todo
  * @SlidingWindow
  * @문제 - 중복되지 않은 문자가 연결되어 있는 최대 길이를 구하라.
  * 시간 복잡도: O(n)
@@ -335,28 +290,30 @@ console.log(minSubArrayLen([1, 4, 16, 22, 5, 7, 8, 9, 10], 95)); // 0);
  * findLongestSubstring('thisishowwedoit') // 6
  */
 
-function findLongestSubstring(str) {
-  let longest = 0;
-  let seen = {};
-  let start = 0;
+/**
+ * @해결
+ * 문자를 순회하면서 key는 해당 문자로 value는 순서로 해당 문자의 순서를 저장한다. (index로 해도 되지만 undefined과 0의 구분을 피하기 위해) -> map
+ * 중복되지 않은 문자의 시작 순서도 저장한다. -> startOrder
+ * map에 존재하는 현재 문자의 값이 (이전에 저장된 문자의 순서값) 존재하고 시작 순서와 같거나 크면 현재 비교하는 범위 내에 존재하는 문자와 중복되는 것이므로
+ * 전에 발견한 중복된 문자의 순서 + 1로 시작 순서를 업데이트해준다.
+ * 현재끼지의 길이 (현재 순서 - 시작 순서 + 1)가 기존 maxLength보다 크면 maxLength로 업데이트 해준다.
+ */
+function findLongestSubstring(string) {
+  let maxLength = 0;
+  let startOrder = 1;
+  const map = {};
 
-  for (let i = 0; i < str.length; i++) {
-    let char = str[i];
-    if (seen[char]) {
-      start = Math.max(start, seen[char]);
+  for (let i = 0; i < string.length; i++) {
+    const char = string[i];
+
+    if (map[char] && map[char] >= startOrder) {
+      startOrder = map[char] + 1;
     }
-    // index - beginning of substring + 1 (to include current in count)
-    longest = Math.max(longest, i - start + 1);
-    // store the index of the next char so as to not double count
-    seen[char] = i + 1;
-  }
-  return longest;
-}
 
-// console.log(findLongestSubstring("")); // 0
-// console.log(findLongestSubstring("rithmschool")); // 7
-// console.log(findLongestSubstring("thisisawesome")); // 6
-// console.log(findLongestSubstring("thecatinthehat")); // 7
-// console.log(findLongestSubstring("bbbbbb")); // 1
-// console.log(findLongestSubstring("longestsubstring")); // 8
-// console.log(findLongestSubstring("thisishowwedoit")); // 6
+    maxLength = Math.max(maxLength, i + 1 - startOrder + 1);
+
+    map[char] = i + 1;
+  }
+
+  return maxLength;
+}
