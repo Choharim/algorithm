@@ -13,7 +13,7 @@
  */
 
 /**
- * @해결법1
+ * @풀이1
  * 시간 복잡도: O(n)
  * 두 array의 길이가 다르면 false를 리턴한다. -> 1
  * 각 array의 요소를 key로 갖고 해당 요소의 갯수를 value로 갖는 object를 생성한다. -> n + n = 2n
@@ -46,7 +46,7 @@ function same(array1, array2) {
 }
 
 /**
- * @해결법2
+ * @풀이2
  * 시간 복잡도: O(n)
  * 두 array의 길이가 다르면 false를 리턴한다. -> 1
  * 첫번째 array의 요소를 key로 갖고 해당 요소의 갯수를 value로 갖는 object를 생성한다. -> n
@@ -80,7 +80,7 @@ function same2(array1, array2) {
  */
 
 /**
- * @해결법1
+ * @풀이1
  * 시간 복잡도: O(n)
  * 첫번째 배열의 요소를 제곱한 값을 key로, count를 value로 한 map을 생성한다. -> n
  * 두번째 배열의 요소를 key로 이전에 생성한 map에 접근해 값이 존재하는지 확인한다. 없으면 false 리턴, 있으면  -1 해준다.

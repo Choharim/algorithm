@@ -7,7 +7,7 @@
  */
 
 /**
- * @해결
+ * @풀이
  * 시간 복잡도: O(n)
  * 공간 복잡도: O(n)
  */
@@ -44,7 +44,7 @@ function sameFrequency(number1, number2) {
  */
 
 /**
- * @해결1 - Frequency Counter를 이용하자.
+ * @풀이1 - Frequency Counter를 이용하자.
  * 인자를 순회하며 key로 저장하고 value는 존재하지 않거나 1개 count 되면 false
  * 2로 count되면 true로 지정하여 true 리턴
  * 시간 복잡도: O(n)
@@ -63,7 +63,7 @@ function areThereDuplicates(...arg) {
 }
 
 /**
- * @해결2 - Multiple Pointers를 이용하자.
+ * @풀이2 - Multiple Pointers를 이용하자.
  *
  * 시간 복잡도: O(nlogN)
  * 공간 복잡도: O(1)
@@ -114,7 +114,7 @@ function areThereDuplicates(...arg) {
  */
 
 /**
- * @해결1
+ * @풀이1
  * 가장 왼쪽에 pointer, 가장 오른쪽에 pointer를 두고 중심으로 이동하는데,
  * 두 pointer의 합이 평균 * 2와 같다면 true
  * 작으면 왼쪽 pointer를 오른쪽으로 한칸 이동시키고, 크면 오른쪽 pointer를 왼쪽으로 한칸 이동시킨다.
@@ -176,7 +176,7 @@ function averagePair(sortedArray, avg) {
  */
 
 /**
- * @해결1
+ * @풀이1
  * 단어에서 pointer가 가리키는 문자가 문장에 존재하면 pointer를 오른쪽으로 한 칸 옮긴다.
  * 없다면 pointer가 가리키는 문자는 처음으로 초기화된다.
  * pointer가 가리키는 문자의 순서가 단어의 길이와 같으면 true를 받환한다.
@@ -204,7 +204,7 @@ function isSubsequence(words, sentence) {
 }
 
 /**
- * @해결2
+ * @풀이2
  * 시간 복잡도: O(n)
  * 공간 복잡도: O(1)
  */
@@ -252,7 +252,7 @@ function isSubsequence(str1, str2) {
  */
 
 /**
- * @해결1
+ * @풀이1
  */
 function maxSubarraySum(sortedArray, count) {
   if (sortedArray.length < count) return null;
@@ -281,7 +281,7 @@ function maxSubarraySum(sortedArray, count) {
 }
 
 /**
- * @해결2
+ * @풀이2
  * 시간 복잡도 O(n)
  * 공간 복잡도 O(1)
  */
@@ -320,7 +320,7 @@ function maxSubarraySum(array, count) {
  */
 
 /**
- * @해결
+ * @풀이
  * 주어진 숫자 이상의 값을 만들 수 있는 최소한의 갯수로 이루어진 양수의 조합을 구하자.
  * 두개의 pointer를 두고 범위를 지정한다. 처음에는 0,0
  * 주어진 값보다 합이 작으면 오른쪽 범위를 늘린다.
@@ -367,7 +367,7 @@ function minSubArrayLen(array, num) {
  */
 
 /**
- * @해결1
+ * @풀이1
  * 문자를 순회하면서 key는 해당 문자로 value는 순서로 해당 문자의 순서를 저장한다. (index로 해도 되지만 undefined과 0의 구분을 피하기 위해) -> map
  * 중복되지 않은 문자의 시작 순서도 저장한다. -> startOrder
  * map에 존재하는 현재 문자의 값이 (이전에 저장된 문자의 순서값) 존재하고 시작 순서와 같거나 크면 현재 비교하는 범위 내에 존재하는 문자와 중복되는 것이므로
@@ -395,7 +395,7 @@ function findLongestSubstring(string) {
 }
 
 /**
- * @해결2
+ * @풀이2
  * 시간 복잡도 O(n)
  * 공간 복잡도: O(1)
  */

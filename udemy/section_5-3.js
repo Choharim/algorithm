@@ -14,7 +14,7 @@
  */
 
 /**
- * @해결법1
+ * @풀이1
  * 시간 복잡도 O(n)
  * 공간 복잡도 O(1)
  * 배열의 갯수가 count 미만일 경우 null을 early 리턴해준다.
@@ -49,7 +49,7 @@ function maxSubarraySum(array, count) {
 }
 
 /**
- * 해결법1과 동일한 원리
+ * 풀이1과 동일한 원리
  */
 function maxSubarraySum(array, count) {
   if (array.length < count) return null;

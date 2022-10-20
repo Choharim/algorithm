@@ -12,7 +12,7 @@
  */
 
 /**
- * @해결법1
+ * @풀이1
  * 시간 복잡도 O(n^2)
  * 공간 복잡도 O(1)
  * 모든 요소를 비교하여 절댓값은 같고 부호가 다르면 해당 두 요소를 리턴한다.
@@ -31,7 +31,7 @@ function sumZero(sortedArray) {
 }
 
 /**
- * @해결법2
+ * @풀이2
  * 시간 복잡도 O(n)
  * 공간 복잡도 O(n)
  * 배열을 순회하면서 헤딩 요소의 절댓값을 key로 저장한다.
@@ -58,7 +58,7 @@ function sumZero(sortedArray) {
 }
 
 /**
- * @해결법3
+ * @풀이3
  * 시간 복잡도 O(n^2)
  * 공간 복잡도 O(1)
  * 절댓값이 같은 음수랑 양수가 만나야 합이 0이 된다. 0을 기준으로 왼쪽은 음수 오른쪽은 양수가 존재한다. 이를 이용하자.
@@ -89,7 +89,7 @@ function sumZero(sortedArray) {
 }
 
 /**
- * @해결법4
+ * @풀이4
  * 시간 복잡도 O(n^2)
  * 공간 복잡도 O(1)
  * 왼쪽에 있을 수록 낮은 값, 오른쪽에 있을 수록 높은 값이다.
@@ -112,14 +112,14 @@ function sumZero(sortedArray) {
 }
 
 /**
- * @해결법5
+ * @풀이5
  * 시간 복잡도 O(n)
  * 공간 복잡도 O(1)
- * 해결법4와 같은 원리이다.
+ * 풀이4와 같은 원리이다.
  * 차이점은 다음과 같다.
  * 음수의 index와 양수의 index를 각 변수에 담아 무한 루프를 돌리며 파악한다.
- * 해결법4에서는 sum이 음수일 때 기준점(왼쪽에 위치한 음수값)이 변경되면서 비교값(오른쪽에 위치한 양수값)이 다시 초기화되어 비교할 필요 없는 부분까지 비교하지만,
- * 해결법5에서는 기준값만 변경되고 비교값은 유지한다.
+ * 풀이4에서는 sum이 음수일 때 기준점(왼쪽에 위치한 음수값)이 변경되면서 비교값(오른쪽에 위치한 양수값)이 다시 초기화되어 비교할 필요 없는 부분까지 비교하지만,
+ * 풀이5에서는 기준값만 변경되고 비교값은 유지한다.
  */
 function sumZero(sortedArray) {
   let minusTargetIndex = 0;
@@ -139,7 +139,7 @@ function sumZero(sortedArray) {
 }
 
 /**
- * @해결법4 - Refactoring
+ * @풀이4 - Refactoring
  * 시간 복잡도 O(n)
  * 공간 복잡도 O(1)
  */
@@ -166,7 +166,7 @@ function sumZero(sortedArray) {
 }
 
 /**
- * @해결법6
+ * @풀이6
  * 1. 합이 0이 되려면 절대값이 같지만 부호가 달라야 한다.
  * 2. 왼쪽/오른쪽에 두개의 포인터를 두고 합계를 구한다.
  * 3. 왼쪽 포인터는 음수, 오른쪽 포인터는 양수여야 하므로 왼쪽 포인터가 0이상이거나, 오른쪽 포인터가 0이하면 실행을 멈춘다.
@@ -205,7 +205,7 @@ function sumZero(sortedArray) {
  */
 
 /**
- * @해결법1
+ * @풀이1
  * 시간 복잡도 O(n)
  * 공간 복잡도 O(1)
  * 유니크한 직전 값(prevUniqueValue)을 저장하는 변수를 생성한다.
@@ -227,7 +227,7 @@ function countUniqueValues(sortedArray) {
 }
 
 /**
- * @해결법2
+ * @풀이2
  * 시간 복잡도 O(n)
  * 공간 복잡도 O(1)
  * 두개의 pointer를 둔다
@@ -257,7 +257,7 @@ function countUniqueValues(sortedArray) {
 }
 
 /**
- * @해결법2 - Refactoring
+ * @풀이2 - Refactoring
  */
 function countUniqueValues(sortedArray) {
   let indexOfLastUniqueValue = 0;
