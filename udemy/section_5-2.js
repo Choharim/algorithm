@@ -144,6 +144,8 @@ function sumZero(sortedArray) {
  * 공간 복잡도 O(1)
  */
 function sumZero(sortedArray) {
+  if (sortedArray.length < 2) return;
+
   let rightPointIndex = sortedArray.length - 1;
 
   for (
@@ -151,13 +153,43 @@ function sumZero(sortedArray) {
     leftPointIndex < sortedArray.length;
     leftPointIndex++
   ) {
-    if (leftPointIndex >= rightPointIndex) return;
+    if (sortedArray[leftPointIndex] >= 0 || sortedArray[rightPointIndex] <= 0)
+      return;
 
     const sum = sortedArray[leftPointIndex] + sortedArray[rightPointIndex];
     if (sum === 0) {
       return [sortedArray[leftPointIndex], sortedArray[rightPointIndex]];
     } else if (sum > 0) {
       --rightPointIndex;
+    }
+  }
+}
+
+/**
+ * @해결법6
+ * 1. 합이 0이 되려면 절대값이 같지만 부호가 달라야 한다.
+ * 2. 왼쪽/오른쪽에 두개의 포인터를 두고 합계를 구한다.
+ * 3. 왼쪽 포인터는 음수, 오른쪽 포인터는 양수여야 하므로 왼쪽 포인터가 0이상이거나, 오른쪽 포인터가 0이하면 실행을 멈춘다.
+ * 4. 합계가 양수면 양수의 절댓값이 음수의 절댓값보다 더 크다는 것이므로 오른쪽 포인터를 왼쪽으로 한 칸 이동인다.
+ * 5. 합계가 음수이면 음수이 절댓값이 양수의 절댓값보다 더 크다는 것이므로 왼쪽 포인터를 오른쪽으로 한 칸 이동한다.
+ */
+function sumZero(sortedArray) {
+  if (sortedArray.length < 2) return; // 최소 요소의 갯수는 2개 이상이어야 한다.
+
+  let negativePointer = 0;
+  let positivePointer = sortedArray.length - 1;
+
+  while (1) {
+    if (sortedArray[negativePointer] >= 0 || sortedArray[positivePointer] <= 0)
+      return;
+
+    const sum = sortedArray[negativePointer] + sortedArray[positivePointer];
+    if (sum === 0) {
+      return [sortedArray[negativePointer], sortedArray[positivePointer]];
+    } else if (sum > 0) {
+      positivePointer--;
+    } else {
+      negativePointer++;
     }
   }
 }

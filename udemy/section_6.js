@@ -51,17 +51,12 @@ function sameFrequency(number1, number2) {
  * 공간 복잡도: O(n)
  */
 function areThereDuplicates(...arg) {
-  let i = 0;
-
   const obj = {};
 
-  while (i < arg.length) {
-    const key = arg[i];
-    obj[key] = !Boolean(obj[key] ?? true);
+  for (const element of arg) {
+    if (obj[element]) return true;
 
-    if (obj[key]) return true;
-
-    i++;
+    obj[element] = true;
   }
 
   return false;
@@ -73,24 +68,37 @@ function areThereDuplicates(...arg) {
  * 시간 복잡도: O(nlogN)
  * 공간 복잡도: O(1)
  */
+/**
+ * 1. Muitipointer를 사용하기 위해서는 정렬이 되어있어야 한다.
+ * 2. 왼쪽 포인터에 중복없는 값만 모은다.
+ * 3. 현재 비교 포인터와 왼쪽 포인터의 값이 다르면
+ *    왼쪽 포인터를 오른쪽으로 한 칸 이동하고 현재 비교 포인터의 값을 오른쪽 포인터의 값에 업데이트 한다. 이때 두 pointer의 위치가 동일하면 업데이트를 하지 않아도 된다.
+ * 4. 값이 같으면 true를 리턴한다.
+ * 5. 그외는 중복된 값이 없는 것이므로 false를 리턴한다.
+ */
 function areThereDuplicates(...arg) {
-  const sortedArray = arg.sort();
+  if (arg.length < 2) return arg.length;
 
-  let lastUniqueValueIndex = 0;
+  const sortedArray = arg.sort(); // O(n*logN)
 
-  for (let index = 1; index < sortedArray.length; index++) {
-    if (sortedArray[lastUniqueValueIndex] !== sortedArray[index]) {
-      ++lastUniqueValueIndex;
+  let uniquePointerIndex = 0;
 
-      if (lastUniqueValueIndex < index) {
-        sortedArray[lastUniqueValueIndex] = sortedArray[index];
-      }
+  for (
+    let comparePointerIndex = 1;
+    comparePointerIndex < sortedArray.length;
+    comparePointerIndex++
+  ) {
+    if (sortedArray[uniquePointerIndex] !== sortedArray[comparePointerIndex]) {
+      ++uniquePointerIndex;
+
+      if (uniquePointerIndex !== comparePointerIndex)
+        sortedArray[uniquePointerIndex] = sortedArray[comparePointerIndex];
     } else {
       return true;
     }
   }
 
-  return lastUniqueValueIndex === arg.length - 2;
+  return false;
 }
 
 /**
@@ -134,6 +142,28 @@ function averagePair(sortedArray, avg) {
 }
 
 /**
+ * 시간 복잡도: O(n)
+ * 공간 복잡도: O(1)
+ */
+function averagePair(sortedArray, avg) {
+  if (sortedArray.length < 2) return false;
+
+  let rightIndex = sortedArray.length - 1;
+
+  for (let leftIndex = 0; leftIndex < rightIndex; leftIndex++) {
+    const sum = sortedArray[leftIndex] + sortedArray[rightIndex];
+
+    if (sum === avg * 2) {
+      return true;
+    } else if (sum > avg * 2) {
+      rightIndex--;
+    }
+  }
+
+  return false;
+}
+
+/**
  * @MultiplePointers
  * @문제 - 문장에 특정한 단어가 포함되어 있는지 확인해라
  * 시간 복잡도: O(n + m)
@@ -146,7 +176,7 @@ function averagePair(sortedArray, avg) {
  */
 
 /**
- * @해결
+ * @해결1
  * 단어에서 pointer가 가리키는 문자가 문장에 존재하면 pointer를 오른쪽으로 한 칸 옮긴다.
  * 없다면 pointer가 가리키는 문자는 처음으로 초기화된다.
  * pointer가 가리키는 문자의 순서가 단어의 길이와 같으면 true를 받환한다.
@@ -173,17 +203,40 @@ function isSubsequence(words, sentence) {
   return false;
 }
 
-// function isSubsequence(str1, str2) {
-//   var i = 0;
-//   var j = 0;
-//   if (!str1) return true;
-//   while (j < str2.length) {
-//     if (str2[j] === str1[i]) i++;
-//     if (i === str1.length) return true;
-//     j++;
-//   }
-//   return false;
-// }
+/**
+ * @해결2
+ * 시간 복잡도: O(n)
+ * 공간 복잡도: O(1)
+ */
+function isSubsequence(word, sentence) {
+  let wordPointer = 0;
+
+  if (sentence.length < word.length) return false;
+
+  for (const char of sentence) {
+    if (word[wordPointer] === char) {
+      wordPointer++;
+
+      if (wordPointer === word.length) return true;
+    } else {
+      wordPointer = 0;
+    }
+  }
+
+  return false;
+}
+
+function isSubsequence(str1, str2) {
+  var i = 0;
+  var j = 0;
+  if (!str1) return true;
+  while (j < str2.length) {
+    if (str2[j] === str1[i]) i++;
+    if (i === str1.length) return true;
+    j++;
+  }
+  return false;
+}
 
 /**
  * @SlidingWindow
@@ -199,7 +252,7 @@ function isSubsequence(words, sentence) {
  */
 
 /**
- * @해결
+ * @해결1
  */
 function maxSubarraySum(sortedArray, count) {
   if (sortedArray.length < count) return null;
@@ -228,7 +281,30 @@ function maxSubarraySum(sortedArray, count) {
 }
 
 /**
- * @todo
+ * @해결2
+ * 시간 복잡도 O(n)
+ * 공간 복잡도 O(1)
+ */
+function maxSubarraySum(array, count) {
+  let maxSum;
+  let currentSum = 0;
+
+  for (let index = 0; index < count; index++) {
+    currentSum += array[index];
+  }
+
+  maxSum = currentSum;
+
+  for (let index = 1; index <= array.length - count; index++) {
+    currentSum += -array[index - 1] + array[index - 1 + count];
+
+    if (currentSum > maxSum) maxSum = currentSum;
+  }
+
+  return maxSum || null;
+}
+
+/**
  * @SlidingWindow
  * @문제 - 양의 정수로 이루어진 배열과 양의 정수가 있을 때, 합이 함수에 전달된 정수보다 크거나 같은 연속 하위 배열의 최소 길이를 반환해라
  * 시간 복잡도: O(n)
@@ -291,7 +367,7 @@ function minSubArrayLen(array, num) {
  */
 
 /**
- * @해결
+ * @해결1
  * 문자를 순회하면서 key는 해당 문자로 value는 순서로 해당 문자의 순서를 저장한다. (index로 해도 되지만 undefined과 0의 구분을 피하기 위해) -> map
  * 중복되지 않은 문자의 시작 순서도 저장한다. -> startOrder
  * map에 존재하는 현재 문자의 값이 (이전에 저장된 문자의 순서값) 존재하고 시작 순서와 같거나 크면 현재 비교하는 범위 내에 존재하는 문자와 중복되는 것이므로
@@ -316,4 +392,33 @@ function findLongestSubstring(string) {
   }
 
   return maxLength;
+}
+
+/**
+ * @해결2
+ * 시간 복잡도 O(n)
+ * 공간 복잡도: O(1)
+ */
+function findLongestSubstring(string) {
+  const object = {};
+  let maxCount = 0;
+
+  let currentCount = 0;
+
+  for (let i = 0; i < string.length; i++) {
+    const char = string[i];
+    const orderOfprevUnique = object[char];
+
+    if (!!orderOfprevUnique && i + 1 - currentCount <= orderOfprevUnique) {
+      currentCount = i + 1 - orderOfprevUnique;
+    } else {
+      currentCount++;
+    }
+
+    maxCount = Math.max(maxCount, currentCount);
+
+    object[char] = i + 1;
+  }
+
+  return maxCount;
 }

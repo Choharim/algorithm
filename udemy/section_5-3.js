@@ -1,10 +1,10 @@
 /**
  * @문제해결패턴 - Sliding Window
- * 특정 범위만 보며 이동할 때 중복된 값은 그대로 유지하고 제거/추가 된 값만 파악하여 값을 업데이트 할 수 있다.
+ * 특정 범위를 지정하여 이동하며 확인하는 패턴이다. 중복된 값은 그대로 유지하고 제거/추가 된 값만 파악하여 값을 업데이트 할 수 있다.
  */
 
 /**
- * @문제1 - 정수로 이루어진 배열에서 얀딜이 놓여진 특정 갯수의 최대 합을 리턴해라.
+ * @문제1 - 정수로 이루어진 배열에서 연달아 놓여진 특정 갯수의 최대 합을 리턴해라.
  * @example
  * maxSubarraySum([1,2,5,2,8,1,5],2) // 10
  * maxSubarraySum([1,2,5,2,8,1,5],4) // 17
@@ -70,4 +70,27 @@ function maxSubarraySum(array, count) {
   }
 
   return maxSum;
+}
+
+/**
+ * 시간 복잡도 O(n)
+ * 공간 복잡도 O(1)
+ */
+function maxSubarraySum(array, count) {
+  let maxSum;
+  let currentSum = 0;
+
+  for (let index = 0; index < count; index++) {
+    currentSum += array[index];
+  }
+
+  maxSum = currentSum;
+
+  for (let index = 1; index <= array.length - count; index++) {
+    currentSum += -array[index - 1] + array[index - 1 + count];
+
+    if (currentSum > maxSum) maxSum = currentSum;
+  }
+
+  return maxSum || null;
 }
