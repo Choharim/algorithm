@@ -310,3 +310,38 @@ function collectStrings(object) {
 
   return result;
 }
+
+/**
+ * @문제 - 주어진 문자열의 모든 애너그램 배열을 반환해라. (애너그램이란, 문자열 내 모든 문자들을 재배열한 문자열)
+ * ex)
+ * 'abc' -> ['abc','acb','bac','bca','cab',cba']
+ */
+
+/**
+ * 시간 복잡도 O(n!)
+ * 주어진 단어 내 문자를 줄지어 세워 만들 수 있는 딘아의 갯수를 구하면
+ * n * (n - 1) * (n - 2) * ... * 1 개이므로 시간 복잡도는 n!이 된다.
+ *
+ * @풀이
+ * 1. 'abc'의 하위 문제는 'ab'이다. 'ab'의 애너그램은 ['ab','ba']이다.
+ * 2. ['ab','ba']를 ['abc','acb','bac','bca','cab',cba']로 만들기 위해선,
+ *    c를 각 요소 사이사이에 배치하여 생성한 단어를 배열에 저장하면 된다.
+ * 3. f(n-1)이 반환한 배열을 순회하며 기존 문제의 마지막 요소(n번째의 input 마지막 요소)를 결과 배열에 저장한다.
+ * 4. input 문자열 길이가 1개일 때는 해당 문자를 배열에 넣어 리턴하면 된다 -> 기저 조건
+ */
+function anagram(string) {
+  let result = [];
+
+  if (string.length === 1) return [string];
+
+  for (const char of anagram(string.slice(0, -1))) {
+    for (let i = 0; i <= char.length; i++) {
+      // 사이사이 모두 넣어야 하므로 문자열 길이 만큼 순회한다.
+      const addedChar = string[string.length - 1];
+
+      result.push(`${char.slice(0, i)}${addedChar}${char.slice(i)}`);
+    }
+  }
+
+  return result;
+}
