@@ -102,10 +102,10 @@ function recursiveRange(n) {
 /**
  * @문제 - 피보나치 수열에서 n번째 수를 구해라
  * ex)
- * fib(4) // 3
- * fib(10) // 55  -> 1,1,2,3,5,8,13,21,34,55
- * fib(28) // 317811
- * fib(35) // 9227465
+ * fibonacci(4) // 3
+ * fibonacci(10) // 55  -> 1,1,2,3,5,8,13,21,34,55
+ * fibonacci(28) // 317811
+ * fibonacci(35) // 9227465
  */
 
 /**
@@ -113,7 +113,7 @@ function recursiveRange(n) {
  * 1. 전 값, 전전 값과 횟수를 카운트 해야하므로 3개의 인수가 필요하다.
  * 2. 주어진 함수는 인자가 1개이므로 helper함수를 이용하자.
  */
-function fib(count) {
+function fibonacci(count) {
   function helper(num1 = 1, num2 = 1, count) {
     if (count === 1) return num1;
 
@@ -126,22 +126,38 @@ function fib(count) {
 /**
  * @풀이2
  * 1. 전 값, 전전 값의 합을 구하면 된다.
- * 2. fib(-1), fib(0)은 존재하지 않으므로 0을 리턴하고,  fib(1)은 1이므로 1을 리턴한다.
+ * 2. fibonacci(-1), fibonacci(0)은 존재하지 않으므로 0을 리턴하고,  fibonacci(1)은 1이므로 1을 리턴한다.
  */
-function fib(count) {
+function fibonacci(count) {
   if (count <= 0) return 0;
   if (count === 1) return 1;
 
-  return fib(count - 2) + fib(count - 1);
+  return fibonacci(count - 2) + fibonacci(count - 1);
+}
+
+function fibonacci(n) {
+  if (n === 0 || n === 1) return 0;
+
+  let a = 0;
+  let b = 1;
+
+  for (let i = 1; i < n - 1; i++) {
+    const prevA = a;
+
+    a = b;
+    b += prevA;
+  }
+
+  return b;
 }
 
 /**
  * @풀이3
  * 1. 전 값, 전전 값의 합을 구하면 된다.
- * 2.fib(1), fib(2)는 1 이므로 1을 리턴한다.
+ * 2.fibonacci(1), fibonacci(2)는 1 이므로 1을 리턴한다.
  */
-function fib(count) {
+function fibonacci(count) {
   if (count <= 2) return 1;
 
-  return fib(count - 2) + fib(count - 1);
+  return fibonacci(count - 2) + fibonacci(count - 1);
 }

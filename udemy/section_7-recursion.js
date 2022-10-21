@@ -57,10 +57,10 @@ function power(x, n) {
  * @문제
  * n번째 피보나치 수를 구해라
  */
-function pibonachi(n) {
+function fibonacci(n) {
   if (n < 2) return n;
 
-  return pibonachi(n - 1) + pibonachi(n - 2);
+  return fibonacci(n - 1) + fibonacci(n - 2);
 }
 
 /**
