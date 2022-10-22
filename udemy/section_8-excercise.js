@@ -11,7 +11,7 @@
  */
 
 /**
- * @풀이
+ * @풀이1
  * 1. 두번째 인자 만큼 첫뺀째 인자를 곱하면 된다.
  * 2. 실행 할 때마다 두번째 인자를 카운트 다운 하여 첫 번째 수를 곱한 횟수를 기억한다.
  * 3. 기저 조건은 두번째 인자가 0이 되었을 때이다. 이때는 이전에 곱한 값에 영향을 주지 않는 1을 곱한다.
@@ -23,6 +23,35 @@ function power(number, count) {
 }
 
 /**
+ * @풀이2
+ * 1. 인수에 실행시킨 횟수와 누적된 결과값을 전달하자.
+ */
+function power(x, n) {
+  function helper(n, result) {
+    if (n === 1) return result;
+
+    return helper(n - 1, result * x);
+  }
+
+  return helper(n, x);
+}
+
+/**
+ * @풀이2 - 1
+ */
+function power(x, n) {
+  if (n === 0) return 1;
+
+  function helper(i = 1) {
+    if (i === n) return x;
+
+    return x * helper(i + 1);
+  }
+
+  return helper();
+}
+
+/**
  * @문제 - 팩토리얼을 구해라.
  * ex)
  * actorial(1) // 1
@@ -31,14 +60,24 @@ function power(number, count) {
  * factorial(7) // 5040
  */
 /**
- * @풀이
+ * @풀이1
  * 1. 주어진 수부터 1까지 곱한다. 이를 위해 다음 곱할 수를 -1 해주기 위해 다음 재귀 함수 인수를 -1한다.
- * 2. 기저 조건은 인수가 0일 때이다. 이전 값에 영향을 주지 않기 위해 1을 리턴한다.
+ * 2. 기저 조건은 인수가 0일 때이다. 이전 값에 영향을 주지 않기 위해 1을 리턴한다. (0!은 1이므로 1을 리턴한다.)
  */
 function factorial(n) {
   if (n === 0) return 1;
 
   return n * factorial(n - 1);
+}
+
+/**
+ * @풀이2
+ * 1. 인수에 결과값을 전달하며 기억한다.
+ */
+function factorial(n, result = 1) {
+  if (n === 1) return result;
+
+  return factorial(n - 1, result * n);
 }
 
 /**
@@ -49,7 +88,7 @@ function factorial(n) {
  */
 
 /**
- * @풀이
+ * @풀이1
  * 1. [1,2,3]은 1*2*3을 리턴해야하고, 하위 문제인 [1,2]는 1*2를 리턴해야 한다.
  * 2. 1*2를 1*2*3와 동일하게 하기 위해서는 기존 문제에서 마지막 요소를 곱해준다.
  * 3. f(n-1) * array[array.length -1]
@@ -61,7 +100,7 @@ function productOfArray(array) {
   return productOfArray(array.slice(0, -1)) * array[array.length - 1];
 }
 /**
- * @풀이
+ * @풀이2
  * 1. [1,2,3]은 1*2*3을 리턴해야하고, 하위 문제인 [2,3]는 2*3를 리턴해야 한다.
  * 2. 2*3을 1*2*3와 동일하게 하기 위해서는 기존 문제에서 첫번째 요소를 곱해준다.
  * 3. array[0] * f(n-1)
@@ -71,6 +110,64 @@ function productOfArray(array) {
   if (array.length === 1) return array[0];
 
   return array[0] * productOfArray(array.slice(1));
+}
+
+/**
+ * @풀이3
+ * 1. 외부 함수에 변수를 선언하여 값을 저장한다.
+ */
+function productOfArray(array) {
+  let result = 1;
+
+  function helper(i = 0) {
+    if (i > array.length - 1) return;
+
+    result *= array[i];
+
+    helper(i + 1);
+  }
+
+  helper();
+
+  return result;
+}
+
+/**
+ * @풀이4
+ * 1. 결과값을 인수에 저장한다.
+ */
+function productOfArray(array) {
+  function helper(i = 0, result = 1) {
+    if (i > array.length - 1) return result;
+
+    return helper(i + 1, result * array[i]);
+  }
+
+  return helper();
+}
+
+/**
+ * @풀이4 -1
+ * 1. 현재 곱해야 하는 값 * 다음 곱해야 하는 값
+ */
+function productOfArray(array) {
+  function helper(i = 0) {
+    if (i === array.length - 1) return array[array.length - 1];
+
+    return array[i] * helper(i + 1);
+  }
+
+  return helper();
+}
+
+/**
+ * @풀이6
+ * 1. 실행한 요소의 index를 인수로 전달한다.
+ */
+function productOfArray(array, i = 0) {
+  if (i === array.length - 1) return array[array.length - 1];
+
+  return array[i] * productOfArray(array, i + 1);
 }
 
 /**
@@ -90,13 +187,27 @@ function recursiveRange(n) {
 }
 
 /**
- * @풀이
+ * @풀이1
  * 재귀로 풀어보자
  */
 function recursiveRange(n) {
   if (n === 1) return 1;
 
   return n + recursiveRange(n - 1);
+}
+
+/**
+ * @풀이2
+ * helper함수에 실행횟수를 전달한다.
+ */
+function recursiveRange(n) {
+  function helper(i = 1) {
+    if (i === n) return n;
+
+    return i + helper(i + 1);
+  }
+
+  return helper();
 }
 
 /**
