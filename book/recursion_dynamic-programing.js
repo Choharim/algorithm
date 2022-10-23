@@ -111,7 +111,7 @@ function uniquePath(n, m) {
 }
 
 /**
- * @풀이
+ * @풀이1
  */
 function uniquePath(n, m) {
   function recursion(n, m, obj = {}) {
@@ -129,6 +129,25 @@ function uniquePath(n, m) {
       };
 
       return obj[n][m];
+    }
+  }
+
+  return recursion(n, m);
+}
+
+/**
+ * @풀이2
+ */
+function uniquePath(n, m) {
+  function recursion(n, m, obj = {}) {
+    if (n === 1 || m === 1) return 1;
+
+    if (obj[[n, m]]) {
+      return obj[[n, m]];
+    } else {
+      obj[[n, m]] = recursion(n, m - 1, obj) + recursion(n - 1, m, obj);
+
+      return obj[[n, m]];
     }
   }
 
