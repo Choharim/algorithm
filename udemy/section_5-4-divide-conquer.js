@@ -18,27 +18,20 @@
  * 범위의 시작점의 index와 끝점의 index를 중간 값과 타겟의 비교를 통해 업데이트 한다.
  *
  */
-function search(sortedArray, element) {
-  let startPointIndex = 0;
-  let endPointIndex = sortedArray.length - 1;
+function binarySearch(sortedArray, number) {
+  let leftPoint = 0;
+  let rightPoint = sortedArray.length - 1;
 
-  while (startPointIndex <= endPointIndex) {
-    let middlePointIndex;
+  while (leftPoint <= rightPoint) {
+    const middlePoint = Math.floor((rightPoint + leftPoint) / 2);
+    const middle = sortedArray[middlePoint];
 
-    if (startPointIndex === endPointIndex) {
-      middlePointIndex = startPointIndex;
+    if (middle === number) {
+      return middlePoint;
+    } else if (middle > number) {
+      rightPoint = middlePoint - 1;
     } else {
-      middlePointIndex = Math.floor((startPointIndex + endPointIndex) / 2);
-    }
-
-    const middlePoint = sortedArray[middlePointIndex];
-
-    if (middlePoint > element) {
-      endPointIndex = middlePointIndex - 1;
-    } else if (middlePoint < element) {
-      startPointIndex = middlePointIndex + 1;
-    } else {
-      return middlePointIndex;
+      leftPoint = middlePoint + 1;
     }
   }
 
