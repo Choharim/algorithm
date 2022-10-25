@@ -61,6 +61,23 @@ function areThereDuplicates(...arg) {
 
   return false;
 }
+/**
+ * 고유한 숫자인지 판단할 때는
+ * object의 key도 고유하지만 array의 index도 고유하기 때문에 이를 이용할 수 있다.
+ */
+function hasDuplicatedValue(array) {
+  let uniqueValues = [];
+
+  for (let i = 0; i < array.length; i++) {
+    if (!uniqueValues[array[i]]) {
+      uniqueValues[array[i]] = 1;
+    } else {
+      return true;
+    }
+  }
+
+  return false;
+}
 
 /**
  * @풀이2 - Multiple Pointers를 이용하자.
