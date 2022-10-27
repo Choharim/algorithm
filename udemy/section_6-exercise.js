@@ -193,67 +193,86 @@ function averagePair(sortedArray, avg) {
  */
 
 /**
- * @풀이1
- * 단어에서 pointer가 가리키는 문자가 문장에 존재하면 pointer를 오른쪽으로 한 칸 옮긴다.
- * 없다면 pointer가 가리키는 문자는 처음으로 초기화된다.
- * pointer가 가리키는 문자의 순서가 단어의 길이와 같으면 true를 받환한다.
- * pointer가 오른쪽으로 이동할 수 있는 갯수보다 문장에서 비교해야하는 남은 문자의 갯수가 더 작으면 false 리턴한다.
- *
+ * @solve 주석 처리된 아래 풀이는 틀렸음
+ * ex) 'aaabb'기 'aaaabbcc'안에 있는 단어인지 확인할 때 false가 나오는 잘못된 답이 나옴.
  */
 function isSubsequence(words, sentence) {
   if (!words.length) return true;
   if (words.length > sentence.length) return false;
 
-  let wordPointerIndex = 0;
-
   for (let i = 0; i < sentence.length; i++) {
-    if (words.length - wordPointerIndex > sentence.length - i - 1) return false;
-
-    if (sentence[i] === words[wordPointerIndex]) {
-      if (words.length - 1 === wordPointerIndex) return true;
-      wordPointerIndex++;
-    } else {
-      wordPointerIndex = 0;
+    for (let j = 0; j < words.length; j++) {
+      if (words[j] !== sentence[i + j]) {
+        break;
+      }
+      if (j === words.length - 1) return true;
     }
   }
 
   return false;
 }
+// /**
+//  * @풀이1
+//  * 단어에서 pointer가 가리키는 문자가 문장에 존재하면 pointer를 오른쪽으로 한 칸 옮긴다.
+//  * 없다면 pointer가 가리키는 문자는 처음으로 초기화된다.
+//  * pointer가 가리키는 문자의 순서가 단어의 길이와 같으면 true를 받환한다.
+//  * pointer가 오른쪽으로 이동할 수 있는 갯수보다 문장에서 비교해야하는 남은 문자의 갯수가 더 작으면 false 리턴한다.
+//  *
+//  */
+// function isSubsequence(words, sentence) {
+//   if (!words.length) return true;
+//   if (words.length > sentence.length) return false;
 
-/**
- * @풀이2
- * 시간 복잡도: O(n)
- * 공간 복잡도: O(1)
- */
-function isSubsequence(word, sentence) {
-  let wordPointer = 0;
+//   let wordPointerIndex = 0;
 
-  if (sentence.length < word.length) return false;
+//   for (let i = 0; i < sentence.length; i++) {
+//     if (words.length - wordPointerIndex > sentence.length - i - 1) return false;
 
-  for (const char of sentence) {
-    if (word[wordPointer] === char) {
-      wordPointer++;
+//     if (sentence[i] === words[wordPointerIndex]) {
+//       if (words.length - 1 === wordPointerIndex) return true;
+//       wordPointerIndex++;
+//     } else {
+//       wordPointerIndex = 0;
+//     }
+//   }
 
-      if (wordPointer === word.length) return true;
-    } else {
-      wordPointer = 0;
-    }
-  }
+//   return false;
+// }
 
-  return false;
-}
+// /**
+//  * @풀이2
+//  * 시간 복잡도: O(n)
+//  * 공간 복잡도: O(1)
+//  */
+// function isSubsequence(word, sentence) {
+//   let wordPointer = 0;
 
-function isSubsequence(str1, str2) {
-  var i = 0;
-  var j = 0;
-  if (!str1) return true;
-  while (j < str2.length) {
-    if (str2[j] === str1[i]) i++;
-    if (i === str1.length) return true;
-    j++;
-  }
-  return false;
-}
+//   if (sentence.length < word.length) return false;
+
+//   for (const char of sentence) {
+//     if (word[wordPointer] === char) {
+//       wordPointer++;
+
+//       if (wordPointer === word.length) return true;
+//     } else {
+//       wordPointer = 0;
+//     }
+//   }
+
+//   return false;
+// }
+
+// function isSubsequence(str1, str2) {
+//   var i = 0;
+//   var j = 0;
+//   if (!str1) return true;
+//   while (j < str2.length) {
+//     if (str2[j] === str1[i]) i++;
+//     if (i === str1.length) return true;
+//     j++;
+//   }
+//   return false;
+// }
 
 /**
  * @SlidingWindow
