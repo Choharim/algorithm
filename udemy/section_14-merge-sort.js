@@ -50,6 +50,51 @@ function merge(sortedArray1, sortedArray2) {
 
   return result;
 }
+function mergeSortedArray(sortedArray1, sortedArray2) {
+  let result = [];
+
+  let array1Pointer = 0;
+  let array2Pointer = 0;
+
+  while (
+    array1Pointer < sortedArray1.length &&
+    array2Pointer < sortedArray2.length
+  ) {
+    if (sortedArray1[array1Pointer] < sortedArray2[array2Pointer]) {
+      result.push(sortedArray1[array1Pointer]);
+
+      array1Pointer++;
+    } else if (sortedArray1[array1Pointer] > sortedArray2[array2Pointer]) {
+      result.push(sortedArray2[array2Pointer]);
+
+      array2Pointer++;
+    } else {
+      result = result.concat([
+        sortedArray1[array1Pointer],
+        sortedArray2[array2Pointer],
+      ]);
+
+      array1Pointer++;
+      array2Pointer++;
+    }
+
+    console.log(result);
+  }
+
+  while (array1Pointer < sortedArray1.length) {
+    result.push(sortedArray1[array1Pointer]);
+
+    array1Pointer++;
+  }
+
+  while (array2Pointer < sortedArray2.length) {
+    result.push(sortedArray2[array2Pointer]);
+
+    array2Pointer++;
+  }
+
+  return result;
+}
 
 /**
  * @정렬
