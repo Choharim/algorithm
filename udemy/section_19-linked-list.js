@@ -37,7 +37,7 @@ class SinglyLinkedList {
   pop() {
     if (!this.head) return undefined;
 
-    let node = this.traverse(this.length - 1);
+    let node = this.get(this.length - 2);
     const last = node.next;
 
     if (!last) {
@@ -51,18 +51,6 @@ class SinglyLinkedList {
     this.length--;
 
     return last || node;
-  }
-
-  traverse(order) {
-    let i = 1;
-    let targetNode = this.head;
-
-    while (i < order && targetNode) {
-      targetNode = targetNode.next;
-      i++;
-    }
-
-    return targetNode;
   }
 
   //  @pop 다른 방법
@@ -117,5 +105,34 @@ class SinglyLinkedList {
     this.length++;
 
     return this;
+  }
+
+  isIndex(index) {
+    if (typeof index !== "number") return false;
+    if (index >= this.length || index < 0) return false;
+
+    return true;
+  }
+
+  get(index) {
+    if (!this.isIndex(index)) return null;
+
+    let target = this.head;
+
+    for (let i = 1; i <= index; i++) {
+      target = target.next;
+    }
+
+    return target;
+  }
+
+  set(index, value) {
+    const node = this.get(index);
+    if (node) {
+      node.value = value;
+
+      return true;
+    }
+    return false;
   }
 }
