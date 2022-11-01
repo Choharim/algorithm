@@ -33,4 +33,59 @@ class SinglyLinkedList {
 
     return this;
   }
+
+  pop() {
+    if (!this.head) return undefined;
+
+    let node = this.traverse(this.length - 1);
+    const last = node.next;
+
+    if (!last) {
+      this.head = null;
+      this.tail = null;
+    } else {
+      node.next = null;
+      this.tail = node;
+    }
+
+    this.length--;
+
+    return last || node;
+  }
+
+  traverse(order) {
+    let i = 1;
+    let targetNode = this.head;
+
+    while (i < order && targetNode) {
+      targetNode = targetNode.next;
+      i++;
+    }
+
+    return targetNode;
+  }
+
+  //  @pop 다른 방법
+  //   pop() {
+  //     if (!this.head) return undefined;
+
+  //     let current = this.head;
+  //     let newTail = current;
+
+  //     while (current.next) {
+  //       newTail = current;
+  //       current = current.next;
+  //     }
+
+  //     if (newTail === current) {
+  //       this.head = null;
+  //       this.tail = null;
+  //     } else {
+  //       newTail.next = null;
+  //       this.tail = newTail;
+  //     }
+
+  //     this.length--;
+  //     return current;
+  //   }
 }
