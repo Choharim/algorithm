@@ -88,4 +88,34 @@ class SinglyLinkedList {
   //     this.length--;
   //     return current;
   //   }
+
+  shift() {
+    if (!this.head) return undefined;
+
+    const first = this.head;
+
+    if (!first.next) {
+      this.tail = null;
+    }
+
+    this.head = this.head.next;
+    this.length--;
+
+    return first;
+  }
+
+  unshift(value) {
+    const node = new Node(value);
+
+    if (!this.head) {
+      this.tail = node;
+    } else {
+      node.next = this.head;
+    }
+
+    this.head = node;
+    this.length++;
+
+    return this;
+  }
 }
