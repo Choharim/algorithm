@@ -18,6 +18,9 @@ class SinglyLinkedList {
     this.length = 0;
   }
 
+  /**
+   * @시간복잡도 O(1)
+   */
   push(value) {
     const newNode = new Node(value);
 
@@ -34,6 +37,9 @@ class SinglyLinkedList {
     return this;
   }
 
+  /**
+   * @시간복잡도 O(n)
+   */
   pop() {
     if (!this.head) return undefined;
 
@@ -77,6 +83,9 @@ class SinglyLinkedList {
   //     return current;
   //   }
 
+  /**
+   * @시간복잡도 O(1)
+   */
   shift() {
     if (!this.head) return undefined;
 
@@ -92,6 +101,9 @@ class SinglyLinkedList {
     return first;
   }
 
+  /**
+   * @시간복잡도 O(1)
+   */
   unshift(value) {
     const node = new Node(value);
 
@@ -114,6 +126,9 @@ class SinglyLinkedList {
     return true;
   }
 
+  /**
+   * @시간복잡도 O(n)
+   */
   get(index) {
     if (!this.isIndex(index)) return null;
 
@@ -126,6 +141,9 @@ class SinglyLinkedList {
     return target;
   }
 
+  /**
+   * @시간복잡도 O(n)
+   */
   set(index, value) {
     const node = this.get(index);
     if (node) {
@@ -134,5 +152,76 @@ class SinglyLinkedList {
       return true;
     }
     return false;
+  }
+
+  /**
+   * @시간복잡도 O(n)
+   */
+  insert(index, value) {
+    if (index === this.length) {
+      this.push(value);
+      return true;
+    }
+    if (index === 0) {
+      this.unshift(value);
+      return true;
+    }
+
+    const frontNode = this.get(index - 1);
+    const backNode = frontNode.next;
+    const node = new Node(value);
+
+    if (!!frontNode) {
+      frontNode.next = node;
+      node.next = backNode;
+      this.length++;
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
+   * @시간복잡도 O(n)
+   */
+  remove(index) {
+    if (index === this.length - 1) {
+      return this.pop();
+    }
+    if (index === 0) {
+      return this.shift();
+    }
+
+    const frontNode = this.get(index - 1);
+    const removedNode = frontNode?.next;
+
+    if (removedNode) {
+      frontNode.next = removedNode.next;
+      this.length--;
+    }
+
+    return removedNode;
+  }
+
+  /**
+   * @시간복잡도 O(n)
+   */
+  reverse() {
+    let current = this.head;
+    this.head = this.tail;
+    this.tail = current;
+
+    let next = null;
+    let prev = null;
+
+    for (let i = 0; i < this.length; i++) {
+      next = current.next;
+      current.next = prev;
+
+      prev = current;
+      current = next;
+    }
+
+    return this;
   }
 }
