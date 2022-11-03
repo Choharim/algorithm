@@ -44,19 +44,23 @@ class SinglyLinkedList {
     if (!this.head) return undefined;
 
     let node = this.get(this.length - 2);
-    const last = node.next;
-
-    if (!last) {
-      this.head = null;
-      this.tail = null;
-    } else {
-      node.next = null;
-      this.tail = node;
-    }
 
     this.length--;
 
-    return last || node;
+    if (!node) {
+      const removed = this.head;
+      this.head = null;
+      this.tail = null;
+
+      return removed;
+    } else {
+      const removed = node.next;
+
+      node.next = null;
+      this.tail = node;
+
+      return removed;
+    }
   }
 
   //  @pop 다른 방법
