@@ -125,7 +125,7 @@ class DoubleLinkedList {
 
     if (isUnderHalf) {
       target = this.head;
-      for (let i = 1; i <= index; i++) {
+      for (let i = 0; i < index; i++) {
         target = target.next;
       }
     } else {
