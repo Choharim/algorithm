@@ -196,20 +196,26 @@ function averagePair(sortedArray, avg) {
  * @solve 주석 처리된 아래 풀이는 틀렸음
  * ex) 'aaabb'기 'aaaabbcc'안에 있는 단어인지 확인할 때 false가 나오는 잘못된 답이 나옴.
  */
-function isSubsequence(words, sentence) {
-  if (!words.length) return true;
-  if (words.length > sentence.length) return false;
+function isSubsequence(word, sentence) {
+  let wP = 0;
+  let sP = 0;
 
-  for (let i = 0; i < sentence.length; i++) {
-    for (let j = 0; j < words.length; j++) {
-      if (words[j] !== sentence[i + j]) {
-        break;
+  while (sP < sentence.length) {
+    if (sentence.length - sP < word.length - wP) return false;
+
+    if (sentence[sP] === word[wP]) {
+      if (wP === word.length - 1) return true;
+      sP++;
+      wP++;
+    } else {
+      if (wP !== 0) {
+        sP -= wP - 1;
+        wP = 0;
+      } else {
+        sP++;
       }
-      if (j === words.length - 1) return true;
     }
   }
-
-  return false;
 }
 // /**
 //  * @풀이1
@@ -364,27 +370,23 @@ function maxSubarraySum(array, count) {
  * 이를 반복한다.
  */
 function minSubArrayLen(array, num) {
-  let minCount = Infinity;
-  let startIndex = 0;
-  let endIndex = 0;
   let sum = array[0];
+  let minLen = Infinity;
 
-  while (startIndex < array.length) {
+  let left = 0;
+  let right = 0;
+  while (right < array.length) {
     if (sum < num) {
-      ++endIndex;
-      if (endIndex === array.length) {
-        break;
-      }
-
-      sum += array[endIndex];
-    } else if (sum >= num) {
-      minCount = Math.min(minCount, endIndex - startIndex + 1);
-
-      sum += -array[startIndex];
-      ++startIndex;
+      right++;
+      sum += array[right];
+    } else {
+      minLen = Math.min(minLen, right - left + 1);
+      sum -= array[left];
+      left++;
     }
   }
-  return minCount === Infinity ? 0 : minCount;
+
+  return minLen === Infinity ? 0 : minLen;
 }
 
 /**
@@ -429,7 +431,26 @@ function findLongestSubstring(string) {
 
   return maxLength;
 }
+function findLongestSubstring(string) {
+  let start = 0;
+  let end = 0;
+  let obj = {};
+  let maxLen = 0;
 
+  while (end < string.length) {
+    const index = obj[string[end]];
+
+    if (index >= start) {
+      start = index + 1;
+    }
+
+    obj[string[end]] = end;
+    maxLen = Math.max(maxLen, end - start + 1);
+    end++;
+  }
+
+  return maxLen;
+}
 /**
  * @풀이2
  * 시간 복잡도 O(n)

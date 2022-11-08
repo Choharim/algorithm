@@ -195,6 +195,28 @@ function sumZero(sortedArray) {
 }
 
 /**
+ * @풀이6
+ * 재귀
+ */
+function findZeroSumPair(sorted) {
+  function recursion(m, p) {
+    if (sorted[m] > 0 || sorted[p] < 0) return;
+
+    const sum = sorted[m] + sorted[p];
+
+    if (sum === 0) {
+      return [sorted[m], sorted[p]];
+    } else if (sum > 0) {
+      return recursion(m, p - 1);
+    } else {
+      return recursion(m + 1, p);
+    }
+  }
+
+  return recursion(0, sorted.length - 1);
+}
+
+/**
  * @문제2 - 오름차순으로 정렬된 숫자가 요소로 된 배열에서 중복된 값을 제거하면 최종 요소의 갯수가 몇개인지 확인해라.
  * 죽, 몇개의 요소로 이루어졌는지 세라.
  * @example
@@ -220,6 +242,20 @@ function countUniqueValues(sortedArray) {
     if (prevUniqueValue !== sortedArray[i]) {
       prevUniqueValue = sortedArray[i];
       ++count;
+    }
+  }
+
+  return count;
+}
+function countUnique(sorted) {
+  if (sorted.length < 2) return sorted.length;
+
+  let count = 1;
+  let lastUni = sorted[0];
+  for (let i = 1; i < sorted.length; i++) {
+    if (lastUni !== sorted[i]) {
+      count++;
+      lastUni = sorted[i];
     }
   }
 
@@ -254,6 +290,25 @@ function countUniqueValues(sortedArray) {
   }
 
   return lastUniqueIndex + 1;
+}
+function countUnique(sorted) {
+  if (sorted.length < 2) return sorted.length;
+
+  let unique = 0;
+  let compare = 1;
+
+  while (compare < sorted.length) {
+    if (sorted[unique] !== sorted[compare]) {
+      unique++;
+      if (unique !== compare) {
+        [sorted[unique], sorted[compare]] = [sorted[compare], sorted[unique]];
+      }
+    }
+
+    compare++;
+  }
+
+  return unique + 1;
 }
 
 /**

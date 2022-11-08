@@ -63,7 +63,7 @@ function same2(array1, array2) {
   }
 
   for (const element of array2) {
-    if (!object1[element]) return false;
+    if (!object1[element]) return false; // 0이거나 undefined일 때
 
     --object1[element];
   }

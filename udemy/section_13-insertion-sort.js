@@ -34,7 +34,7 @@ function insertionSort(array) {
       array[j + 1] = array[j];
     }
 
-    if (i !== j + 1) array[j + 1] = target; // for문에서 j는 후위연산으로 인해 -1되기 때문에 마지막 j를 구하기 위해 +1 해주어야 함.
+    if (i !== j + 1) array[j + 1] = target;
   }
 
   return array;

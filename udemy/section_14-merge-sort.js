@@ -78,7 +78,7 @@ function mergeSortedArray(sortedArray1, sortedArray2) {
       array2Pointer++;
     }
 
-    console.log(result);
+    return result;
   }
 
   while (array1Pointer < sortedArray1.length) {
@@ -95,7 +95,30 @@ function mergeSortedArray(sortedArray1, sortedArray2) {
 
   return result;
 }
+function merge(sorted1, sorted2) {
+  let result = [];
 
+  let P1 = 0;
+  let P2 = 0;
+
+  while (P1 < sorted1.length && P2 < sorted2.length) {
+    if (sorted1[P1] > sorted2[P2]) {
+      result.push(sorted2[P2]);
+      P2++;
+    } else if (sorted1[P1] < sorted2[P2]) {
+      result.push(sorted1[P1]);
+      P1++;
+    } else {
+      result = [...result, sorted1[P1], sorted2[P2]];
+      P1++;
+      P2++;
+    }
+  }
+
+  result = [...result, ...sorted1.slice(P1), ...sorted2.slice(P2)];
+
+  return result;
+}
 /**
  * @정렬
  * 1. 나눈 절반을 구현한 merge함수로 합쳐준다.
@@ -111,6 +134,12 @@ function mergeSort(array) {
     mergeSort(array.slice(0, halfIndex)),
     mergeSort(array.slice(halfIndex))
   );
+}
+function mergeSort(arr, start = 0, end = arr.length - 1) {
+  if (start === end) return [arr[start]];
+
+  const middle = Math.floor((start + end) / 2);
+  return merge(mergeSort(arr, start, middle), mergeSort(arr, middle + 1, end));
 }
 
 /**
