@@ -61,13 +61,10 @@ tree.insert(20);
  *   예를 들어, 이진 트리에 모든 노드가 있고 깊이가 10 (최대 단계 9)라면 2^10 = 1024의 길이를 최대로 가진다.
  * - 너비는 없고 깊이만 있는 linear한 트리일 경우는 공간 복잡도가 O(1)이다.
  * - 모든 노드를 모두 방문하니 DFS와 시간 복잡도는 동일하다.
- *
  */
 
 /**
  * @방법1 - 반복문
- */
-/**
  * 1. 작업할 노드를 queue에 저장한다.
  * 2. queue가 비어있지 않으면 (작업할 노드가 있으면) dequeue한 노드의 value를 결과값이 담는다. 그리고 dequeue한 노드의 왼/오 노드를 앞으로 작업해야 하니 queue에 담는다.
  * 3. 이를 반복한다.
@@ -94,9 +91,7 @@ BinarySearchTree.prototype.BFS = function () {
 
 /**
  * @방법2 - 재귀
- */
-/**
- * ** 재귀를 작성할 때 작성하기 쉬운 방법!!
+ * 재귀를 작성할 때 작성하기 쉬운 방법!!
  * - 기저 조건을 파악한다.
  * - 리턴 값을 파악한다.
  * - 기저조건일 때와 기저조건이 아닐 때의 결과 형태는 동일해야하고, 기저 조건이 아닐 때는 재귀를 실행하되 이때의 재귀 함수는 기저 조건에서 반환한 값이 반환된다고 생각한다.
@@ -136,6 +131,8 @@ BinarySearchTree.prototype.BFS = function (queue = [this.root]) {
  * @전위순회 (pre order)
  * - 방문한 곳 node 값 넣기 먼저
  * [ 10, 6, 3, 8, 15, 20 ]
+ * 특징
+ * - 다시 이전과 동일한 트리 구조로 되돌릴 수 있다.
  */
 BinarySearchTree.prototype.DFSPreOrder = function (startNode = this.root) {
   let result = [];
@@ -186,6 +183,8 @@ BinarySearchTree.prototype.DFSPostOrder = function () {
  * @중위순회 (in order)
  * - 방문한 곳 node 값 넣기 중간에
  * [ 3, 6, 8, 10, 15, 20 ]
+ * 특징
+ * - 이진 탐색 트리에서 오름차순으로 정렬된 배열을 얻는다.
  */
 BinarySearchTree.prototype.DFSInOrder = function () {
   let result = [];
