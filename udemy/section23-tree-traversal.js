@@ -58,7 +58,7 @@ tree.insert(20);
  * [ 10, 6, 15, 3, 8, 20 ]
  * 특징
  * - queue의 최대 길이는 트리의 마지막 단계의 노드 갯수와 동일하다. 트리가 넓을 경우 공간복잡도가 O(2^n)이다.
- *   예를 들어, 이진 트리에 모든 노드가 있고 깊이가 10 (최대 단계 9)라면 2^10 = 1024의 길이를 최대로 가진다.
+ *   예를 들어, 이진 트리에 모든 노드가 있고 깊이가 10 (최대 단계 9)라면 2^9 = 512의 길이를 최대로 가진다.
  * - 너비는 없고 깊이만 있는 linear한 트리일 경우는 공간 복잡도가 O(1)이다.
  * - 모든 노드를 모두 방문하니 DFS와 시간 복잡도는 동일하다.
  */
@@ -151,6 +151,21 @@ BinarySearchTree.prototype.DFSPreOrder = function (startNode = this.root) {
   }
 
   traverse(startNode);
+
+  return result;
+};
+BinarySearchTree.prototype.DFSPreOrder = function (start = this.root) {
+  let result = [];
+
+  if (!start) return result;
+
+  result.push(start.value);
+  if (start.left) {
+    result = [...result, ...this.DFS(start.left)];
+  }
+  if (start.right) {
+    result = [...result, ...this.DFS(start.right)];
+  }
 
   return result;
 };
