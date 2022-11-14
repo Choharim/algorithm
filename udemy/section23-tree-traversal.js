@@ -220,6 +220,11 @@ BinarySearchTree.prototype.DFSInOrder = function () {
 
   return result;
 };
+
+/**
+ * @DFS - stack으로 구현
+ *
+ */
 console.log(tree.BFS());
 console.log(tree.DFSPreOrder());
 console.log(tree.DFSPostOrder());

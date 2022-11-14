@@ -1,18 +1,21 @@
 /**
  * @binaryHeap
- * 이진 트리의 종류로, 모든 자식이 존재함.
- * heap은 왼쪽에서 오른쪽 방향으로 채워짐.
- */
-
-/**
+ * - 이진 트리의 종류로, 모든 자식이 존재함. (빠지 노드 없이 완전히 채워진 트리: 완전한 트리) O(logN)연산을 위해 균형 트리여야 함.
+ * - heap은 왼쪽에서 오른쪽 방향으로 채워짐.
+ * - 삽입과 삭제가 주요 연산이다.
+ *
  * 이진 힙에서 순서대로 노드의 값을 나열하여 배열에 담았을 때,
  * - index n의 자식은 index 2n+1, 2n+2 이디.
  * - idnex m의 부모는 index Math.floor((m -1)/2)이다.
  */
 
 /**
- * @MaxBinaryHeap
+ * @MaxBinaryHeap (최대 힙)
  * 부모는 자식보다 크다는 규칙을 갖는 이진힙이다.
+ * 루트 노드는 항상 최댓값이다.
+ * @MinBinartHeap (최소 힙)
+ * 부모는 자식보다 작다는 규칙을 갖는 이진힙이다.
+ * 루트 노드는 항상 최솟값이다.
  */
 class MaxBinaryHeap {
   constructor() {
@@ -113,4 +116,99 @@ heap.extractMax();
 heap.extractMax();
 heap.insert(99);
 heap.insert(10);
-console.log(heap.values);
+
+/**
+ * @우선순위큐 (priority queue)
+ */
+class Node {
+  constructor(value, priority) {
+    this.value = value;
+    this.priority = priority;
+  }
+}
+
+class PriorityQueue {
+  constructor() {
+    this.values = [];
+  }
+
+  enqueue(value, priority) {
+    const newNode = new Node(value, priority);
+
+    this.values.push(newNode);
+
+    let index = this.values.length - 1;
+    let parentIndex;
+
+    while (index > 0) {
+      parentIndex = Math.floor((index - 1) / 2);
+
+      if (this.values[parentIndex].priority <= this.values[index].priority)
+        break;
+
+      [this.values[parentIndex], this.values[index]] = [
+        this.values[index],
+        this.values[parentIndex],
+      ];
+
+      index = parentIndex;
+    }
+  }
+
+  dequeue() {
+    let index = 0;
+    const removed = this.values[index];
+
+    const end = this.values.pop();
+
+    if (!this.values.length) return removed;
+
+    this.values[index] = end;
+
+    let leftChildIndex;
+    let rightChildIndex;
+    let swapIndex;
+    while (index < this.values.length) {
+      leftChildIndex = 2 * index + 1;
+      rightChildIndex = leftChildIndex + 1;
+
+      if (leftChildIndex >= this.values.length) break;
+
+      if (
+        this.values[index].priority <= this.values[leftChildIndex].priority &&
+        this.values[index].priority <=
+          (this.values[rightChildIndex]?.priority ?? Infinity)
+      )
+        break;
+
+      if (
+        this.values[leftChildIndex].priority <
+        (this.values[rightChildIndex]?.priority ?? Infinity)
+      ) {
+        swapIndex = leftChildIndex;
+      } else {
+        swapIndex = rightChildIndex;
+      }
+
+      [this.values[swapIndex], this.values[index]] = [
+        this.values[index],
+        this.values[swapIndex],
+      ];
+
+      index = swapIndex;
+    }
+
+    return removed;
+  }
+}
+
+let ER = new PriorityQueue();
+ER.enqueue("cold", 5);
+ER.enqueue("gunshot wound", 1);
+ER.enqueue("high fever", 4);
+ER.enqueue("broken arm", 2);
+ER.enqueue("covid19", 3);
+ER.dequeue();
+ER.dequeue();
+ER.dequeue();
+ER.dequeue();
