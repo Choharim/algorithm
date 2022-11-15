@@ -73,8 +73,8 @@ class MaxBinaryHeap {
       rightChildIndex = leftChildIndex + 1;
 
       if (
-        this.values[index] > (this.values?.[leftChildIndex] ?? -Infinity) &&
-        this.values[index] > (this.values?.[rightChildIndex] ?? -Infinity)
+        this.values[index] >= (this.values?.[leftChildIndex] ?? -Infinity) &&
+        this.values[index] >= (this.values?.[rightChildIndex] ?? -Infinity)
       )
         break;
 
