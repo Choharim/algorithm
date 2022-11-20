@@ -67,4 +67,34 @@ class Graph {
 
     return result;
   }
+
+  /**
+   * @BFS - breath first search
+   * queue 이용
+   * [ 'A', 'B', 'C', 'D', 'E', 'F' ]
+   */
+  BFS(start) {
+    let queue = [];
+    let visited = {};
+    let result = [];
+
+    visited[start] = true;
+    queue.push(start);
+
+    let vertex;
+    while (queue.length) {
+      vertex = queue.shift();
+
+      result.push(vertex);
+
+      this.adjacentList[vertex].forEach((v) => {
+        if (!visited[v]) {
+          visited[v] = true;
+          queue.push(v);
+        }
+      });
+    }
+
+    return result;
+  }
 }
