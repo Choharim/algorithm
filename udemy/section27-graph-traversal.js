@@ -1,7 +1,7 @@
 /**
- * @DFS - depth first search
+ * @그래프 탐색 시간 복잡도 O(V + E)
+ * vertex 갯수 + 인접한 vertex 갯수 (= edge 갯수 * 2)
  */
-
 class Graph {
   constructor() {
     this.adjacentList = {
@@ -14,6 +14,9 @@ class Graph {
     };
   }
 
+  /**
+   * @DFS - depth first search
+   */
   /**
    * @방법1 - 재귀 사용
    * [ 'A', 'B', 'D', 'E', 'C', 'F' ]
