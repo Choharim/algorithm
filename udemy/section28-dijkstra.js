@@ -21,7 +21,7 @@
 /**
  * 최소 값을 갖는 vertex를 찾기 위한 우선 순위 큐
  */
-class PriorityQueue {
+class PriorityQueue1 {
   constructor() {
     this.values = [];
   }
@@ -36,18 +36,91 @@ class PriorityQueue {
     return this.values.shift();
   }
 
-  update(val, priority) {
-    const index = this.values.findIndex((v) => v.val === val);
-
-    if (index >= 0) {
-      this.values[index] = { val, priority };
-    }
-
-    this.sort();
-  }
-
   sort() {
     this.values.sort((a, b) => a.priority - b.priority);
+  }
+}
+
+/**
+ * @우선순위큐 - 이진 힙 사용하여 성능 개선
+ */
+class PriorityQueue {
+  constructor() {
+    this.values = [];
+  }
+
+  enqueue(val, priority) {
+    this.values.push({ val, priority });
+
+    this.bubbleUp();
+  }
+
+  bubbleUp() {
+    let parentIndex;
+    let index = this.values.length - 1;
+    while (index > 0) {
+      parentIndex = Math.floor((index - 1) / 2);
+
+      if (this.values[parentIndex].priority <= this.values[index].priority)
+        break;
+
+      [this.values[parentIndex], this.values[index]] = [
+        this.values[index],
+        this.values[parentIndex],
+      ];
+      index = parentIndex;
+    }
+  }
+
+  dequeue() {
+    const firstPriority = this.values[0];
+
+    const end = this.values.pop();
+
+    if (!this.values.length) return firstPriority;
+
+    this.values[0] = end;
+
+    this.bubbleDown();
+
+    return firstPriority;
+  }
+
+  bubbleDown() {
+    let index = 0;
+    let leftChildIndex;
+    let rightChildIndex;
+
+    while (1) {
+      leftChildIndex = 2 * index + 1;
+      rightChildIndex = leftChildIndex + 1;
+
+      if (leftChildIndex >= this.values.length) return;
+
+      if (
+        this.values[index].priority <= this.values[leftChildIndex].priority &&
+        this.values[index].priority <=
+          (this.values[rightChildIndex]?.priority ?? Infinity)
+      )
+        return;
+
+      let swapIndex;
+      if (
+        this.values[leftChildIndex].priority <
+        (this.values[rightChildIndex]?.priority ?? Infinity)
+      ) {
+        swapIndex = leftChildIndex;
+      } else {
+        swapIndex = rightChildIndex;
+      }
+
+      [this.values[swapIndex], this.values[index]] = [
+        this.values[index],
+        this.values[swapIndex],
+      ];
+
+      index = swapIndex;
+    }
   }
 }
 
@@ -103,7 +176,7 @@ class WeightedGraph {
    * priority queue 사용하지 않고, 원리만 생각해서 작성한 코드
    * 결과값: A -> C -> D -> F -> E (6)
    */
-  dijkstra(start, end) {
+  dijkstra1(start, end) {
     let visited = [];
     const vertexs = Object.keys(this.adjacentList);
     let distance = Object.assign(
@@ -159,72 +232,51 @@ class WeightedGraph {
   }
 
   /**
-   * 우선순위 큐를 이용해 작성한 코드
+   * @다익스트라 알고리즘
    */
   dijkstra(start, end) {
-    let distancePQ = new PriorityQueue();
-    const vertexs = Object.keys(this.adjacentList);
-    let previous = Object.assign({}, ...vertexs.map((v) => ({ [v]: null })));
+    const nodes = new PriorityQueue();
+    let distance = {};
+    let previous = {};
 
-    for (const vertex of vertexs) {
-      distancePQ.enqueue(vertex, vertex === start ? 0 : Infinity);
+    for (const vertex in this.adjacentList) {
+      distance[vertex] = start === vertex ? 0 : Infinity;
+      previous[vertex] = null;
+      nodes.enqueue(vertex, start === vertex ? 0 : Infinity);
     }
 
-    let current;
-    while (distancePQ.values.length) {
-      current = distancePQ.dequeue();
+    let shortest;
 
-      if (!current) break;
+    while (nodes.values.length) {
+      shortest = nodes.dequeue()?.val;
 
-      for (const { node, weight } of this.adjacentList[current.val]) {
-        if (!distancePQ.values.find((v) => v.val === node)) continue;
+      if (!shortest || shortest === end) break;
 
-        const path = current.priority + weight;
-        const prevPath = distancePQ.values.find(
-          (v) => v.val === node
-        )?.priority;
-        if (prevPath > path) {
-          previous[node] = current.val;
-          distancePQ.update(node, path);
+      for (const { node, weight } of this.adjacentList[shortest]) {
+        if (!nodes.values.find((v) => v.val === node)) continue;
+
+        const path = distance[shortest] + weight;
+        if (distance[node] > path) {
+          previous[node] = shortest;
+          distance[node] = path;
+          nodes.enqueue(node, path);
         }
       }
     }
 
-    return previous;
+    let target = end;
+    let result = target;
+
+    while (1) {
+      result = `${previous[target]} -> ${result}`;
+      target = previous[target];
+      if (target === start) break;
+    }
+
+    return `${result} (${distance[end]})`;
   }
-
-  //   dijkstra(start, end) {
-  //     const nodes = new PriorityQueue();
-  //     let distance = {};
-  //     let previous = {};
-
-  //     for (const vertex in this.adjacentList) {
-  //       distance[vertex] = start === vertex ? 0 : Infinity;
-  //       previous[vertex] = null;
-  //       nodes.enqueue(vertex, start === vertex ? 0 : Infinity);
-  //     }
-
-  //     let shortest;
-
-  //     while (nodes.values.length) {
-  //       shortest = nodes.dequeue()?.val;
-
-  //       if (!shortest || shortest === end) break;
-
-  //       for (const { node, weight } of this.adjacentList[shortest]) {
-  //         if (!nodes.values.find((v) => v.val === node)) continue;
-
-  //         const path = distance[shortest] + weight;
-  //         if (distance[node] > path) {
-  //           previous[node] = shortest;
-  //           nodes.update(node, path);
-  //         }
-  //       }
-  //     }
-
-  //     return previous;
-  //   }
 }
 
 let weightedGraph = new WeightedGraph();
+console.log(weightedGraph.dijkstra1("A", "E"));
 console.log(weightedGraph.dijkstra("A", "E"));
