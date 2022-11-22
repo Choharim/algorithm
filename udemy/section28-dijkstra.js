@@ -253,8 +253,6 @@ class WeightedGraph {
       if (!shortest || shortest === end) break;
 
       for (const { node, weight } of this.adjacentList[shortest]) {
-        if (!nodes.values.find((v) => v.val === node)) continue;
-
         const path = distance[shortest] + weight;
         if (distance[node] > path) {
           previous[node] = shortest;
