@@ -161,10 +161,10 @@ BinarySearchTree.prototype.DFSPreOrder = function (start = this.root) {
 
   result.push(start.value);
   if (start.left) {
-    result = [...result, ...this.DFS(start.left)];
+    result = [...result, ...this.DFSPreOrder(start.left)];
   }
   if (start.right) {
-    result = [...result, ...this.DFS(start.right)];
+    result = [...result, ...this.DFSPreOrder(start.right)];
   }
 
   return result;
