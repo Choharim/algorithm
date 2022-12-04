@@ -215,18 +215,14 @@ function collectEven(array, result = []) {
 /**
  * @풀이3
  */
-function collectEven(array) {
-  let result = [];
+function collectEven(arr, result = [], i = 0) {
+  if (i < arr.length) {
+    if (arr[i] % 2 === 0) {
+      return result.concat(collectEven(arr, [arr[i]], i + 1));
+    }
 
-  if (!array.length) {
-    return result;
+    return result.concat(collectEven(arr, [], i + 1));
   }
-
-  if (array[0] % 2 === 0) {
-    result.push(array[0]);
-  }
-
-  result = result.concat(collectEven(array.slice(1)));
 
   return result;
 }
