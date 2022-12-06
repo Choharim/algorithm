@@ -274,3 +274,153 @@ function maxScore(limitTime, arr) {
 
   return maxScore;
 }
+
+/**
+ * @문제  - 1부터 N까지 번호가 적힌 구슬을 M번 뽑아 나열하는 방법
+ * 입력
+ * 3 2 // N, M
+ *
+ * 출력
+ * 1 1
+ * 1 2
+ * 1 3
+ * 2 1
+ * 2 2
+ * 2 3
+ * 3 1
+ * 3 2
+ * 3 3
+ * 9  // 방법 수
+ */
+/**
+ * 1. 뽑을 수 있는 수 N개 중 1개를 M번 뽑는다. 방법 수는 N^M이 된다.
+ *    M번 동일한 행동을 해야하기 때문에 큰 사이클은 M
+ * 2. 기저 조건 - M
+ * 3. string 반환
+ * // getPermutation(3, 2)
+ */
+function getPermutation(n, m) {
+  let result = "";
+  let count = 0;
+
+  function DFS(cycle = 0, arr = []) {
+    if (cycle >= m) {
+      result += arr.join(" ");
+      result += "\n";
+      count++;
+    } else {
+      for (let i = 1; i <= n; i++) {
+        arr[cycle] = i;
+        DFS(cycle + 1, arr);
+      }
+    }
+  }
+
+  DFS();
+
+  return `${result}${count}`;
+}
+
+/**
+ * @문제 - 여러 단위의 동전들이 주어져 있을때 거스름돈을 가장 적은 수의 동전으로 교환 해주려면 어떻게 주면 되는가? 각 단위의 동전은 무한정 쓸 수 있다.
+ * 입력
+ * 3 // 동전 종류 갯수
+ * 1 2 5 // 동전 종류
+ * 15 // 거스름돈
+ *
+ * 출력
+ * 3
+ */
+/**
+ * 1. 1,2,5로 15를 만들 수 있는 조합을 구하자. (동전종류가 오름차순으로 주어졌으므로 숫자가 큰 동전부터 사용하여 합이 15가 되는 조합을 구한다. 이때, min이 update되면 최소갯수이므로 실행을 종료한다. )
+ * 2. 기저 조건 - 합이 15이상이면 재귀함수를 더이상 호출하지 않는다.
+ * 3. number 갯수 반환값
+ * getMinCoinCount([1, 2, 5], 15)
+ */
+function getMinCoinCount(coins, change) {
+  let min = Infinity;
+
+  function DFS(sum = 0, count = 0) {
+    if (sum > change) return;
+    if (min !== Infinity) return;
+
+    if (sum === change) {
+      min = Math.min(min, count);
+    } else {
+      for (let i = coins.length - 1; i >= 0; i--) {
+        DFS(sum + coins[i], count + 1);
+      }
+    }
+  }
+  DFS();
+
+  return min;
+}
+/**
+ * 동전 종류가 오름차순으로 주어지지 않는다면, 동전 순서 뒤부터 하지 않아도 되고 모든 15 조합을 구하면서 min을 계속 업데이트 해야함
+ * getMinCoinCount([1, 5, 2], 15)
+ */
+function getMinCoinCount(coins, change) {
+  let min = Infinity;
+
+  function DFS(sum = 0, count = 0) {
+    if (sum > change) return;
+    if (count >= min) return;
+
+    if (sum === change) {
+      min = Math.min(min, count);
+    } else {
+      for (let i = 0; i < coins.length; i++) {
+        DFS(sum + coins[i], count + 1);
+      }
+    }
+  }
+  DFS();
+
+  return min;
+}
+
+/**
+ * @문제 - 10이하의 N개의 자연수가 주어지면 이 중 M개를 뽑아 일렬로 나열하는 방법을 모두 출력합 니다. (N개의 자연수가 오름차순으로 주어집니다.)
+ * 입력
+ * 3 2 // N:3, M:2
+ * 3 6 9 // 수 3,6,9
+ *
+ * 출력
+ * 3 6
+ * 3 9
+ * 6 3
+ * 6 9
+ * 9 3
+ * 9 6
+ * 6   // 총 갯수
+ */
+/**
+ * 1. '뽑을 수 있는 숫자 중 1개뽑기' M번 반복한다.
+ * 2. 기저 조건 - M
+ * // getNPermutationM([3, 6, 9], 2))
+ */
+function getNPermutationM(numbers, M) {
+  let result = "";
+  let count = 0;
+
+  function DFS(L, selectedNums = [], checkArr = []) {
+    if (L >= M) {
+      result += selectedNums.join(" ") + "\n";
+      count++;
+    } else {
+      for (let i = 0; i < numbers.length; i++) {
+        if (checkArr[i]) continue;
+
+        selectedNums[L] = numbers[i];
+        checkArr[i] = true;
+        DFS(L + 1, selectedNums, checkArr);
+
+        checkArr[i] = false;
+      }
+    }
+  }
+  DFS(0);
+
+  return `${result}${count}`;
+}
