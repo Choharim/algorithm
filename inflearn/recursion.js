@@ -424,3 +424,184 @@ function getNPermutationM(numbers, M) {
 
   return `${result}${count}`;
 }
+
+/**
+ * @문제 - 다음 공식을 사용하여 재귀를 이용해 조합수를 구해주는 프로그램을 작성하세요. nCr = n-1Cr-1 + n-1Cr
+ * 입력
+ * 5 3 // 5C3
+ * 출력
+ * 10
+ */
+/**
+ * 1. nCr = n-1Cr-1 + n-1Cr
+ * 2.
+ */
+function getCombination(n, r, hash = {}) {
+  if (r === 1 || n - r === 1) return n;
+  if (r === n || r === 0) return 1;
+
+  if (hash[`${n - 1}_${r}`] === undefined) {
+    hash[`${n - 1}_${r}`] = getCombination(n - 1, r, hash);
+  }
+  if (hash[`${n - 1}_${r - 1}`] === undefined) {
+    hash[`${n - 1}_${r - 1}`] = getCombination(n - 1, r - 1, hash);
+  }
+
+  return hash[`${n - 1}_${r}`] + hash[`${n - 1}_${r - 1}`];
+}
+
+/**
+ * @문제 - 가장 윗줄에 1부터 N까지의 숫자가 한 개씩 적혀 있다. 그리고 둘째 줄부터 차례대로 파스칼 의 삼각형처럼 위의 두개를 더한 값이 저장되게 된다.
+ * N과 가장 밑에 있는 숫자가 주어져 있을 때 가장 윗줄에 있는 숫자를 구하는 프로그램을 작성하 시오. 단, 답이 여러가지가 나오는 경우에는 사전순으로 가장 앞에 오는 것을 출력하여야 한다.
+ * 3 1 2 4  // N: 4, 1 ~ N 까지의 수
+ *  4 3 6
+ *   7 9
+ *   16 // F
+ * 입력
+ * 4 16 // N: 4, F: 16
+ * 출력
+ * 3 1 2 4 // 가장 윗줄에 있는 숫자
+ */
+/**
+ * 1. 1 ~ N까지의 연속된 자연수를 a,b,c,d라고 했을 때, F = a(N-1C0) + b(N-1C1) + c(N-1C1) + d(N-1C0)이다. (a < d, b < c)
+ *    (N-1단계를 거치면서 합을 구하는 동안 양쪽부터 0개 중복, 1개 중복, 2개 중복...이 되는 상황이기 때문에 조합을 사용함)
+ *    a,b,c,d를 나열하여 위의 조건에 부합한 경우를 찾아야 한다. 조금 더 빨리 찾기 위해 작은 수부터 선택해서 나열한다.
+ * 2.
+ */
+function getPascalTriangleBaseNumbers(n, f) {
+  let sum = 0;
+  let result = "";
+  function DFS(L = 0, selectedNums = [], hash = {}) {
+    if (!!result) return;
+
+    if (L >= n) {
+      for (let i = 0; i < selectedNums.length; i++) {
+        sum += selectedNums[i] * getCombination(n - 1, i);
+      }
+      if (sum === f) {
+        result = selectedNums.join(" ");
+      }
+      sum = 0;
+    } else {
+      for (let i = 1; i <= n; i++) {
+        if (hash[i]) continue;
+
+        selectedNums[L] = i;
+        hash[i] = true;
+        DFS(L + 1, selectedNums, hash);
+
+        hash[i] = false;
+      }
+    }
+  }
+  DFS();
+
+  return result;
+}
+/**
+ * - selectedNus에 각 수에 곱해지는 컴비네이션 값은 정해져 있으므로 미리 구해놓는다.
+ * - sum을 selectedNums을 구하면서 업데이트 한다.
+ * // getPascalTriangleBaseNumbers(4, 16)
+ */
+function getPascalTriangleBaseNumbers(n, f) {
+  let result = "";
+  const counts = Array.from({ length: n }, (_, i) => getCombination(n - 1, i));
+
+  function DFS(L = 0, selectedNums = [], hash = {}, sum = 0) {
+    if (!!result) return;
+
+    if (L >= n) {
+      if (sum === f) {
+        result = selectedNums.join(" ");
+      }
+    } else {
+      for (let i = 1; i <= n; i++) {
+        if (hash[i]) continue;
+
+        selectedNums[L] = i;
+        hash[i] = true;
+        DFS(L + 1, selectedNums, hash, sum + selectedNums[L] * counts[L]);
+
+        hash[i] = false;
+      }
+    }
+  }
+  DFS();
+
+  return result;
+}
+
+/**
+ * @문제 - 1부터 N까지 번호가 적힌 구슬이있습니다.이중 M개를 뽑는 방법의 수를 출력하는 프로그램을 작성하세요.
+ * 입력
+ * 4 2 // N, M
+ *
+ * 출력
+ * 1 2
+ * 1 3
+ * 1 4
+ * 2 3
+ * 2 4
+ * 3 4
+ * 6
+ */
+/**
+ * 1. 선택한 수는 다시 선택할 수 없다. 이전에 나온 조합은 만들지 않는다. (다음 레벨은 이전 레벨에서 선택한 수의 +1부터 선택 가능)
+ * 2. 기저 조건 - M 뽑는 수를 넘으면 재귀 함수를 호출하지 않는다.
+ * // getNCombinationM(4, 2)
+ */
+function getNCombinationM(n, m) {
+  let result = "";
+  let count = 0;
+
+  function DFS(L = 0, start = 1, nums = []) {
+    if (L >= m) {
+      result += nums.join(" ");
+      result += "\n";
+      count++;
+    } else {
+      for (let i = start; i <= n; i++) {
+        nums[L] = i;
+        DFS(L + 1, i + 1, nums);
+      }
+    }
+  }
+  DFS();
+
+  return `${result}${count}`;
+}
+
+/**
+ * @문제 - N개의 정수가 주어지면 그 숫자들 중 K개를 뽑는 조합의 합이 임의의 정수 M의 배수인 개수 는 몇 개가 있는지 출력하는 프로그램을 작성하세요.
+ * 예를 들면 5개의 숫자 2 4 5 8 12가 주어지고, 3개를 뽑은 조합의 합이 6의 배수인 조합을 찾으면 4+8+12 2+4+12로 2가지가 있습니다.
+ * 입력
+ * 5 3 // N:5, K:3 (5개 숫자 중 3개를 뽑음)
+ * 2 4 5 8 12 // 5개 숫자
+ * 6 // M: 6 (6의 배수)
+ *
+ * 출력
+ * 2
+ */
+/**
+ * 1. 이전에 뽑은 index자리 이후의 숫자를 뽑는다.
+ * 2. 기저 조건 - K 두개의 수를 뽑으면 재귀함수를 호출하지 않는다.
+ * getMultipleOfMInCombination([2, 4, 5, 8, 12], 3, 6)
+ */
+function getMultipleOfMInCombination(numbers, k, m) {
+  let count = 0;
+
+  function DFS(L = 0, index = 0, sum = 0) {
+    if (L >= k) {
+      if (sum % m === 0) {
+        count++;
+      }
+    } else {
+      for (let i = index; i < numbers.length; i++) {
+        DFS(L + 1, i + 1, sum + numbers[i]);
+      }
+    }
+  }
+  DFS();
+
+  return count;
+}
