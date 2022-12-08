@@ -25,6 +25,19 @@ function getOneToNInString(n) {
   return `${getOneToNInString(n - 1)} ${n}`;
 }
 
+// review
+function solution(n) {
+  if (n === 1) return 1;
+
+  return `${solution(n - 1)} ${n}`;
+}
+function solution(n, result = `${n}`) {
+  if (n === 1) return result;
+
+  return solution(n - 1, `${n - 1} ${result}`);
+}
+//
+
 /**
  * @문제 - 10진수 N이 입력되면 2진수로 변환하여 출력하는 프로그램을 작성하세요.
  */
@@ -53,6 +66,16 @@ function getBinaryNumber(n) {
 
   return `${result.slice(0, result.length - 1 - digit)}${10 ** digit}`;
 }
+
+// review
+function solution(num, result = "") {
+  if (num === 1) {
+    return `${num}${result}`;
+  } else {
+    return solution(Math.floor(num / 2), `${num % 2}${result}`);
+  }
+}
+//
 
 /**
  * 1. 2로 나눈 나머지를 1의 자리부터 채워넣는다.
@@ -93,6 +116,25 @@ function traverseBinaryTree(n) {
 
   return result;
 }
+
+// review
+function solution(root = 1) {
+  let result = [];
+
+  function DFS(v) {
+    if (v > 7) {
+    } else {
+      result.push(v);
+      DFS(v * 2);
+
+      DFS(v * 2 + 1);
+    }
+  }
+  DFS(root);
+
+  return result;
+}
+//
 
 /**
  * @문제 - 자연수 N이 주어지면 1부터 N까지의 원소를 갖는 집합의 부분집합을 모두 출력하는 프로그램 을 작성하세요.
@@ -160,6 +202,34 @@ function getSubset(n) {
   return result;
 }
 
+// review
+function solution(n) {
+  let result = "";
+  let temp;
+  let count = 0;
+  function DFS(number = 1, selected = {}) {
+    if (number > n) {
+      temp = Object.keys(selected);
+      if (!temp.length) return;
+
+      count++;
+      if (count > 1) result += "\n";
+
+      result += temp.join("");
+    } else {
+      selected[number] = true;
+      DFS(number + 1, selected);
+
+      delete selected[number];
+      DFS(number + 1, selected);
+    }
+  }
+  DFS();
+
+  return result;
+}
+//
+
 /**
  * @문제 - 합이 같은 부분집합
  * N개의 원소로 구성된 자연수 집합이 주어지면, 이 집합을 두 개의 부분집합으로 나누었을 때 두 부분집합의 원소의 합이 서로 같은 경우가 존재하면 “YES"를 출력하고, 그렇지 않으면 ”NO"를 출력하는 프로그램을 작성하세요.
@@ -195,6 +265,30 @@ function checkSubsetsWithSameSum(arr) {
 
   return result;
 }
+
+// review
+function solution(nums) {
+  let result = "NO";
+  const total = nums.reduce((acc, prev) => (acc += prev), 0);
+
+  function DFS(index = 0, sum = 0) {
+    if (result === "YES") return;
+
+    if (index >= nums.length) {
+      if (sum * 2 === total) {
+        result = "YES";
+      }
+    } else {
+      DFS(index + 1, sum + nums[index]);
+
+      DFS(index + 1, sum);
+    }
+  }
+  DFS();
+
+  return result;
+}
+//
 
 /**
  * @문제 - 특정 수를 넘지 않는 가장 큰 합
@@ -235,6 +329,27 @@ function getMaxSumLessThanN(n, arr) {
   return result;
 }
 
+// review
+function solution(limit, dogs) {
+  let maxSum = 0;
+
+  function DFS(index = 0, sum = 0) {
+    if (index >= dogs.length) {
+      if (sum <= limit && maxSum < sum) {
+        maxSum = sum;
+      }
+    } else {
+      DFS(index + 1, sum + dogs[index]);
+
+      DFS(index + 1, sum);
+    }
+  }
+  DFS();
+
+  return maxSum;
+}
+//
+
 /**
  * @문제 - N개의 문제를 풀려고 합니다. 각 문제는 그것을 풀었을 때 얻는 점수와 푸는데 걸리는 시간이 주어지게 됩 니다. 제한시간 M안에 N개의 문제 중 최대점수를 얻을 수 있도록 해야 합니다.
  * (해당문제는 해당시간이 걸리면 푸는 걸로 간주한다, 한 유형당 한개만 풀 수 있습니다.)
@@ -274,6 +389,27 @@ function maxScore(limitTime, arr) {
 
   return maxScore;
 }
+
+// review
+function solution(limitTime, scores) {
+  let maxScore = 0;
+
+  function DFS(index = 0, score = 0, time = 0) {
+    if (index >= scores.length) {
+      if (time <= limitTime) {
+        maxScore = Math.max(maxScore, score);
+      }
+    } else {
+      DFS(index + 1, score + scores[index][0], time + scores[index][1]);
+
+      DFS(index + 1, score, time);
+    }
+  }
+  DFS();
+
+  return maxScore;
+}
+//
 
 /**
  * @문제  - 1부터 N까지 번호가 적힌 구슬을 M번 뽑아 나열하는 방법
@@ -320,6 +456,28 @@ function getPermutation(n, m) {
 
   return `${result}${count}`;
 }
+
+// review
+function solution(n, m) {
+  let result = "";
+  let count = 0;
+  function DFS(index = 0, selected = []) {
+    if (index >= m) {
+      result += selected.join(" ");
+      result += "\n";
+      count++;
+    } else {
+      for (let i = 1; i <= n; i++) {
+        selected[index] = i;
+        DFS(index + 1, selected);
+      }
+    }
+  }
+  DFS();
+
+  return `${result}${count}`;
+}
+//
 
 /**
  * @문제 - 여러 단위의 동전들이 주어져 있을때 거스름돈을 가장 적은 수의 동전으로 교환 해주려면 어떻게 주면 되는가? 각 단위의 동전은 무한정 쓸 수 있다.
@@ -380,6 +538,28 @@ function getMinCoinCount(coins, change) {
   return min;
 }
 
+// review
+function solution(coins, price) {
+  //   coins.sort();
+  let result;
+
+  function DFS(selectedSum = 0, selectedCount = 0) {
+    if (result) return;
+
+    if (selectedSum >= price) {
+      if (selectedSum === price) result = selectedCount;
+    } else {
+      for (let i = coins.length - 1; i >= 0; i--) {
+        DFS(selectedSum + coins[i], selectedCount + 1);
+      }
+    }
+  }
+  DFS();
+
+  return result;
+}
+//
+
 /**
  * @문제 - 10이하의 N개의 자연수가 주어지면 이 중 M개를 뽑아 일렬로 나열하는 방법을 모두 출력합 니다. (N개의 자연수가 오름차순으로 주어집니다.)
  * 입력
@@ -425,6 +605,34 @@ function getNPermutationM(numbers, M) {
   return `${result}${count}`;
 }
 
+// review
+function solution(numbers, selectCount) {
+  let result = "";
+  let count = 0;
+
+  function DFS(index = 0, selected = [], checked = {}) {
+    if (index >= selectCount) {
+      result += selected.join(" ");
+      result += "\n";
+      count++;
+    } else {
+      for (let i = 0; i < numbers.length; i++) {
+        if (checked[numbers[i]]) continue;
+
+        selected[index] = numbers[i];
+        checked[numbers[i]] = true;
+        DFS(index + 1, selected, checked);
+
+        delete checked[numbers[i]];
+      }
+    }
+  }
+  DFS();
+
+  return `${result}${count}`;
+}
+//
+
 /**
  * @문제 - 다음 공식을 사용하여 재귀를 이용해 조합수를 구해주는 프로그램을 작성하세요. nCr = n-1Cr-1 + n-1Cr
  * 입력
@@ -449,6 +657,21 @@ function getCombination(n, r, hash = {}) {
 
   return hash[`${n - 1}_${r}`] + hash[`${n - 1}_${r - 1}`];
 }
+
+// review
+function solution(n, r, resultStore = {}) {
+  if (r === 1 || n - r === 1) return n;
+  if (r == 0 || n - r === 0) return 1;
+
+  if (resultStore[`${n - 1}_${r}`] === undefined) {
+    resultStore[`${n - 1}_${r}`] = solution(n - 1, r, resultStore);
+  }
+  if (resultStore[`${n - 1}_${r - 1}`] === undefined) {
+    resultStore[`${n - 1}_${r - 1}`] = solution(n - 1, r - 1, resultStore);
+  }
+  return resultStore[`${n - 1}_${r}`] + resultStore[`${n - 1}_${r - 1}`];
+}
+//
 
 /**
  * @문제 - 가장 윗줄에 1부터 N까지의 숫자가 한 개씩 적혀 있다. 그리고 둘째 줄부터 차례대로 파스칼 의 삼각형처럼 위의 두개를 더한 값이 저장되게 된다.
@@ -498,6 +721,7 @@ function getPascalTriangleBaseNumbers(n, f) {
 
   return result;
 }
+
 /**
  * - selectedNus에 각 수에 곱해지는 컴비네이션 값은 정해져 있으므로 미리 구해놓는다.
  * - sum을 selectedNums을 구하면서 업데이트 한다.
@@ -530,6 +754,38 @@ function getPascalTriangleBaseNumbers(n, f) {
 
   return result;
 }
+
+// review
+function solution(n, f) {
+  let result;
+  const countOfSeletedNums = Array.from({ length: n }, (_, i) =>
+    getNCombinationR(n - 1, i)
+  );
+
+  function DFS(index = 0, selected = [], sum = 0, check = {}) {
+    if (result) return;
+
+    if (index >= n) {
+      if (sum === f) {
+        result = selected.join(" ");
+      }
+    } else {
+      for (let num = 1; num <= n; num++) {
+        if (check[num]) continue;
+
+        check[num] = true;
+        selected[index] = num;
+        DFS(index + 1, selected, sum + num * countOfSeletedNums[index], check);
+
+        delete check[num];
+      }
+    }
+  }
+  DFS();
+
+  return result;
+}
+//
 
 /**
  * @문제 - 1부터 N까지 번호가 적힌 구슬이있습니다.이중 M개를 뽑는 방법의 수를 출력하는 프로그램을 작성하세요.
@@ -571,6 +827,29 @@ function getNCombinationM(n, m) {
   return `${result}${count}`;
 }
 
+// review
+function solution(n, m) {
+  let result = "";
+  let count = 0;
+
+  function DFS(index = 0, start = 1, selected = []) {
+    if (index >= m) {
+      result += selected.join("");
+      result += "\n";
+      count++;
+    } else {
+      for (let num = start; num <= n; num++) {
+        selected[index] = num;
+        DFS(index + 1, num + 1, selected);
+      }
+    }
+  }
+  DFS();
+
+  return `${result}${count}`;
+}
+//
+
 /**
  * @문제 - N개의 정수가 주어지면 그 숫자들 중 K개를 뽑는 조합의 합이 임의의 정수 M의 배수인 개수 는 몇 개가 있는지 출력하는 프로그램을 작성하세요.
  * 예를 들면 5개의 숫자 2 4 5 8 12가 주어지고, 3개를 뽑은 조합의 합이 6의 배수인 조합을 찾으면 4+8+12 2+4+12로 2가지가 있습니다.
@@ -605,3 +884,24 @@ function getMultipleOfMInCombination(numbers, k, m) {
 
   return count;
 }
+
+// review
+function solution(numbers, k, m) {
+  let result = 0;
+
+  function DFS(index = 0, startIndex = 0, sum = 0) {
+    if (index >= k) {
+      if (sum % m === 0) {
+        result++;
+      }
+    } else {
+      for (let i = startIndex; i < numbers.length; i++) {
+        DFS(index + 1, i + 1, sum + numbers[i]);
+      }
+    }
+  }
+  DFS();
+
+  return result;
+}
+//
