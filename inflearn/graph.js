@@ -86,6 +86,39 @@ function solution(start, end, vertexArr) {
 
   return `${result}${count}`;
 }
+function solution(start, end, vertexArr) {
+  const graphList = makeGraphList(vertexArr);
+  let count = 0;
+  let result = "";
+
+  let check = {};
+  let visited = [];
+
+  function DFS(s) {
+    if (s === end) {
+      count++;
+
+      result += visited.join(" ");
+      result += "\n";
+    } else {
+      for (let i = 0; i < graphList[s].length; i++) {
+        if (check[graphList[s][i]]) continue;
+
+        check[graphList[s][i]] = true;
+        visited.push(graphList[s][i]);
+        DFS(graphList[s][i]);
+
+        delete check[graphList[s][i]];
+        visited.pop();
+      }
+    }
+  }
+  check[start] = true;
+  visited.push(start);
+  DFS(start);
+
+  return `${result}${count}`;
+}
 
 /**
  * 인접 행렬 이용
@@ -247,4 +280,3 @@ function solution(root) {
 
   return visited;
 }
-console.log(solution(1));
