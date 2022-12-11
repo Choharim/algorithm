@@ -196,42 +196,67 @@ function solution(start, end, vertexArr) {
  */
 function solution(grid) {
   const end = grid.length - 1;
-  let cheked = {};
+  const dx = [-1, 0, 1, 0];
+  const dy = [0, -1, 0, 1];
+
   // let visited = [];
   let count = 0;
 
   function DFS(x, y) {
     if (x === end && y === end) {
-      cheked[[x, y]] = true;
+      grid[x][y] = 1;
       // visited.push([x, y]);
 
       count++;
     } else {
-      cheked[[x, y]] = true;
+      grid[x][y] = 1;
       // visited.push([x, y]);
 
-      for (let i = -1; i <= 1; i += 2) {
-        if (x + i < 0 || x + i > end) continue;
-        if (cheked[[x + i, y]]) continue;
-        if (grid[x + i][y]) continue;
+      for (let i = 0; i < 4; i++) {
+        if (x + dx[i] < 0 || x + dx[i] > end) continue;
+        if (y + dy[i] < 0 || y + dy[i] > end) continue;
+        if (grid[x + dx[i]][y + dy[i]]) continue;
 
-        DFS(x + i, y);
+        DFS(x + dx[i], y + dy[i]);
 
-        delete cheked[[x + i, y]];
-        // visited.pop();
-      }
-
-      for (let j = -1; j <= 1; j += 2) {
-        if (y + j < 0 || y + j > end) continue;
-        if (cheked[[x, y + j]]) continue;
-        if (grid[x][y + j]) continue;
-
-        DFS(x, y + j);
-        delete cheked[[x, y + j]];
+        grid[x + dx[i]][y + dy[i]] = 0;
         // visited.pop();
       }
     }
   }
+  DFS(0, 0);
+
+  return count;
+}
+
+function solution(grid) {
+  const end = grid.length - 1;
+  const dx = [-1, 0, 1, 0];
+  const dy = [0, -1, 0, 1];
+
+  // let visited = [];
+  let count = 0;
+
+  function DFS(x, y) {
+    if (x === end && y === end) {
+      count++;
+    } else {
+      for (let i = 0; i < 4; i++) {
+        if (x + dx[i] < 0 || x + dx[i] > end) continue;
+        if (y + dy[i] < 0 || y + dy[i] > end) continue;
+        if (grid[x + dx[i]][y + dy[i]]) continue;
+
+        grid[x + dx[i]][y + dy[i]] = 1;
+        // visited.push([x + dx[i], y + dy[i]]);
+        DFS(x + dx[i], y + dy[i]);
+
+        grid[x + dx[i]][y + dy[i]] = 0;
+        // visited.pop();
+      }
+    }
+  }
+  grid[0][0] = 1;
+  // visited.push([0, 0]);
   DFS(0, 0);
 
   return count;
