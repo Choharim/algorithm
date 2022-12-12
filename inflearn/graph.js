@@ -269,39 +269,207 @@ function solution(grid) {
  * 오른쪽 노드 : 부모의 * 2 + 1
  * 단계는 3단계 (마지막 노드의 값 7)
  */
-function Queue() {
-  this.queue = [];
-
-  this.enqueue = function (val) {
-    this.queue.push(val);
-  };
-
-  this.dequeue = function () {
-    return this.queue.shift();
-  };
-}
+//solution(1)
 function solution(root) {
-  const queue = new Queue();
-
-  let visited = [];
+  let queue = [];
   let dequeue;
 
+  let visited = [];
+
   function BFS() {
-    dequeue = queue.dequeue();
+    dequeue = queue.shift();
 
-    if (dequeue > 7) {
-    } else {
-      visited.push(dequeue);
+    if (dequeue > 7) return;
 
-      queue.enqueue(dequeue * 2);
-      queue.enqueue(dequeue * 2 + 1);
+    visited.push(dequeue);
 
-      BFS();
-    }
+    queue.push(dequeue * 2);
+    queue.push(dequeue * 2 + 1);
+
+    BFS();
   }
 
-  queue.enqueue(root);
+  queue.push(root);
   BFS();
 
   return visited;
+}
+function solution(root) {
+  let queue = [];
+  let visited = [];
+
+  queue.push(root);
+
+  let dequeue;
+  while (queue.length) {
+    dequeue = queue.shift();
+    if (dequeue > 7) break;
+
+    visited.push(dequeue);
+
+    if (dequeue * 2 + 1 > 7) continue;
+    queue.push(dequeue * 2);
+    queue.push(dequeue * 2 + 1);
+  }
+
+  return visited;
+}
+
+/**
+ * @문제 - 현수의 위치와 송아 지의 위치가 수직선상의 좌표 점으로 주어지면 현수는 현재 위치에서 송아지의 위치까지 다음 과 같은 방법으로 이동한다. 송아지는 움직이지 않고 제자리에 있다.
+ * 현수는 스카이 콩콩을 타고 가는데 한 번의 점프로 앞으로 1, 뒤로 1, 앞으로 5를 이동할 수 있다.
+ * 최소 몇 번의 점프로 현수가 송아지의 위치까지 갈 수 있는지 구하는 프로그램을 작성 하세요.
+ *
+ * 입력
+ * 5 14 // 현수 위치, 송아지 위치
+ * 출력
+ * 3
+ */
+function solution(start, end) {
+  const move = [1, -1, 5];
+  let queue = [];
+  let check = {};
+
+  function BFS() {
+    queue.push([start, 0]);
+    check[start] = true;
+
+    while (queue.length) {
+      [position, level] = queue.shift();
+
+      for (let i = 0; i < move.length; i++) {
+        if (position + move[i] === end) return level + 1;
+        if (position + move[i] < 1 || position + move[i] > 10000) continue;
+        if (check[position + move[i]]) continue;
+
+        check[position + move[i]] = true;
+        queue.push([position + move[i], level + 1]);
+      }
+    }
+  }
+  return BFS();
+}
+function solution(start, end) {
+  const move = [1, -1, 5];
+  let queue = [];
+  let check = {};
+  let dequeue;
+  let cycle;
+
+  let level = 0;
+
+  function BFS() {
+    queue.push(start);
+    check[start] = true;
+
+    while (queue.length) {
+      cycle = queue.length;
+
+      level++;
+      for (let i = 1; i <= cycle; i++) {
+        dequeue = queue.shift();
+
+        for (let j = 0; j < move.length; j++) {
+          if (dequeue + move[j] < 1 || dequeue + move[j] > 10000) continue;
+          if (check[dequeue + move[j]]) continue;
+          if (dequeue + move[j] === end) {
+            return;
+          }
+
+          queue.push(dequeue + move[j]);
+          check[dequeue + move[j]] = true;
+        }
+      }
+    }
+  }
+  BFS();
+
+  return level;
+}
+
+/**
+ * @문제 - N*N의 섬나라 아일랜드의 지도가 격자판의 정보로 주어집니다.
+ * 각 섬은 1로 표시되어 상하좌 우와 대각선으로 연결되어 있으며, 0은 바다입니다.
+ * 섬나라 아일랜드에 몇 개의 섬이 있는지 구하는 프로그램을 작성하세요.
+ */
+
+// solution([
+//   [1, 1, 0, 0, 0, 1, 0],
+//   [0, 1, 1, 0, 1, 1, 0],
+//   [0, 1, 0, 0, 0, 0, 0],
+//   [0, 0, 0, 1, 0, 1, 1],
+//   [1, 1, 0, 1, 1, 0, 0],
+//   [1, 0, 0, 0, 1, 0, 0],
+//   [1, 0, 1, 0, 1, 0, 0],
+// ])
+function solution(islandBoard) {
+  const dx = [0, 0, -1, 1, 1, 1, -1, -1];
+  const dy = [-1, 1, 0, 0, 1, -1, 1, -1];
+  const n = islandBoard.length;
+
+  let count = 0;
+
+  function DFS(x, y) {
+    islandBoard[x][y] = 0;
+
+    for (let i = 0; i < dx.length; i++) {
+      if (x + dx[i] < 0 || x + dx[i] >= n) continue;
+      if (y + dy[i] < 0 || y + dy[i] >= n) continue;
+      if (!islandBoard[x + dx[i]][y + dy[i]]) continue;
+
+      DFS(x + dx[i], y + dy[i]);
+    }
+  }
+
+  for (let i = 0; i < n; i++) {
+    for (let j = 0; j < n; j++) {
+      if (islandBoard[i][j]) {
+        count++;
+
+        DFS(i, j);
+      }
+    }
+  }
+
+  return count;
+}
+/***
+ * queue에 넣을 때 islandBoard를 0으로 해주어야 불필요하게 같은 곳이 queue에 들어가지 않음
+ */
+function solution(islandBoard) {
+  const n = islandBoard.length;
+  const dx = [0, 0, -1, 1, 1, 1, -1, -1];
+  const dy = [-1, 1, 0, 0, 1, -1, 1, -1];
+  let queue = [];
+
+  let count = 0;
+
+  function BFS() {
+    while (queue.length) {
+      [x, y] = queue.shift();
+
+      for (let k = 0; k < dx.length; k++) {
+        if (x + dx[k] < 0 || x + dx[k] >= n) continue;
+        if (y + dy[k] < 0 || y + dy[k] >= n) continue;
+        if (!islandBoard[x + dx[k]][y + dy[k]]) continue;
+
+        islandBoard[x + dx[k]][y + dy[k]] = 0;
+        queue.push([x + dx[k], y + dy[k]]);
+      }
+    }
+  }
+
+  for (let i = 0; i < n; i++) {
+    for (let j = 0; j < n; j++) {
+      if (islandBoard[i][j]) {
+        count++;
+
+        islandBoard[i][j] = 0;
+        queue.push([i, j]);
+        BFS();
+      }
+    }
+  }
+
+  return count;
 }
