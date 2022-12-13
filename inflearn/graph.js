@@ -261,6 +261,38 @@ function solution(grid) {
 
   return count;
 }
+// review
+function solution(grid) {
+  const end = grid.length - 1;
+
+  let count = 0;
+
+  function DFS(x, y) {
+    if (x === end && y === end) {
+      count++;
+    } else {
+      for (const [a, b] of [
+        [x, y + 1],
+        [x, y - 1],
+        [x - 1, y],
+        [x + 1, y],
+      ]) {
+        if (a < 0 || a > end) continue;
+        if (b < 0 || b > end) continue;
+        if (grid[a][b]) continue;
+
+        grid[a][b] = 1;
+        DFS(a, b);
+
+        grid[a][b] = 0;
+      }
+    }
+  }
+  grid[0][0] = 1;
+  DFS(0, 0);
+
+  return count;
+}
 
 /**
  * @문제 - 이진트리를 넓이우선탐색해 보세요.
@@ -270,30 +302,6 @@ function solution(grid) {
  * 단계는 3단계 (마지막 노드의 값 7)
  */
 //solution(1)
-function solution(root) {
-  let queue = [];
-  let dequeue;
-
-  let visited = [];
-
-  function BFS() {
-    dequeue = queue.shift();
-
-    if (dequeue > 7) return;
-
-    visited.push(dequeue);
-
-    queue.push(dequeue * 2);
-    queue.push(dequeue * 2 + 1);
-
-    BFS();
-  }
-
-  queue.push(root);
-  BFS();
-
-  return visited;
-}
 function solution(root) {
   let queue = [];
   let visited = [];
@@ -311,6 +319,39 @@ function solution(root) {
     queue.push(dequeue * 2);
     queue.push(dequeue * 2 + 1);
   }
+
+  return visited;
+}
+
+//review
+function solution(root = 1) {
+  let queue = [];
+  let dequeue;
+  let level = 0;
+
+  let visited = [];
+
+  function BFS() {
+    while (queue.length) {
+      let cycle = queue.length;
+
+      level++;
+
+      while (cycle) {
+        dequeue = queue.shift();
+        visited.push(dequeue);
+
+        if (level < 3) {
+          queue.push(dequeue * 2);
+          queue.push(dequeue * 2 + 1);
+        }
+
+        cycle--;
+      }
+    }
+  }
+  queue.push(root);
+  BFS();
 
   return visited;
 }
@@ -387,6 +428,42 @@ function solution(start, end) {
   return level;
 }
 
+// review
+function solution(start, end) {
+  let queue = [];
+  let dequeue;
+  let check = {};
+
+  let level = 0;
+
+  function BFS() {
+    while (queue.length) {
+      let cycle = queue.length;
+
+      while (cycle) {
+        dequeue = queue.shift();
+
+        for (const x of [dequeue + 1, dequeue - 1, dequeue + 5]) {
+          if (check[x]) continue;
+          if (x < 1 || x > 10000) continue;
+          if (x === end) return level + 1;
+
+          queue.push(x);
+          check[x] = true;
+        }
+
+        cycle--;
+      }
+
+      level++;
+    }
+  }
+
+  queue.push(start);
+  check[start] = true;
+  return BFS();
+}
+
 /**
  * @문제 - N*N의 섬나라 아일랜드의 지도가 격자판의 정보로 주어집니다.
  * 각 섬은 1로 표시되어 상하좌 우와 대각선으로 연결되어 있으며, 0은 바다입니다.
@@ -433,6 +510,46 @@ function solution(islandBoard) {
 
   return count;
 }
+
+// review
+function solution(matrix) {
+  const end = matrix.length - 1;
+
+  let count = 0;
+
+  function DFS(x, y) {
+    matrix[x][y] = 0;
+
+    for (const [a, b] of [
+      [x, y + 1],
+      [x, y - 1],
+      [x - 1, y],
+      [x + 1, y],
+      [x - 1, y + 1],
+      [x + 1, y + 1],
+      [x - 1, y - 1],
+      [x + 1, y - 1],
+    ]) {
+      if (a < 0 || a > end) continue;
+      if (b < 0 || b > end) continue;
+      if (!matrix[a][b]) continue;
+
+      DFS(a, b);
+    }
+  }
+
+  matrix.forEach((row, x) => {
+    row.forEach((num, y) => {
+      if (!num) return;
+
+      count++;
+      DFS(x, y);
+    });
+  });
+
+  return count;
+}
+
 /***
  * queue에 넣을 때 islandBoard를 0으로 해주어야 불필요하게 같은 곳이 queue에 들어가지 않음
  */
