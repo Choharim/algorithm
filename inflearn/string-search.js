@@ -4,9 +4,10 @@
 function solution(string) {
   const middle = Math.floor(string.length / 2) - 1;
 
+  const lowerCase = string.toLowerCase();
+
   for (let i = 0; i <= middle; i++) {
-    if (string[i].toLowerCase() !== string[string.length - 1 - i].toLowerCase())
-      return "NO";
+    if (lowerCase[i] !== lowerCase[string.length - 1 - i]) return "NO";
   }
 
   return "YES";
@@ -53,12 +54,11 @@ function solution(string) {
 
   for (let i = 0; i < string.length; i++) {
     if (isNaN(+string[i])) continue;
-    if (!number && string[i] === "0") continue;
 
     number += string[i];
   }
 
-  return number;
+  return Number(number);
 }
 
 /**
