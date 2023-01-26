@@ -1,45 +1,47 @@
-const n = +input.shift();
+const n = Number(input[0]);
 
-let graph = Array.from({ length: n }, () => Array(n).fill(0));
+const matrix = [];
+for (let i = 1; i <= n; i++) {
+  matrix[i - 1] = input[i].split("").map(Number);
+}
+
+const result = [];
+const dx = [0, 1, 0, -1];
+const dy = [1, 0, -1, 0];
+
 for (let i = 0; i < n; i++) {
   for (let j = 0; j < n; j++) {
-    graph[i][j] = +input[i][j];
+    if (!matrix[i][j]) continue;
+
+    result.push(DFS(i, j));
   }
 }
 
-let total = 0;
-let group = [];
-let groupCount = 0;
+function DFS(x, y) {
+  let count = 0;
+  const stack = [[x, y]];
+  matrix[x][y] = 0;
 
-for (let i = 0; i < n; i++) {
-  for (let j = 0; j < n; j++) {
-    if (!graph[i][j]) continue;
+  while (stack.length) {
+    [a, b] = stack.pop();
 
-    total++;
-    dfs(i, j);
-    group.push(groupCount);
-    groupCount = 0;
+    count++;
+
+    for (let i = 0; i < 4; i++) {
+      const cx = a + dx[i];
+      const cy = b + dy[i];
+
+      if (cx < 0 || cx >= n || cy < 0 || cy >= n) continue;
+      if (!matrix[cx][cy]) continue;
+
+      stack.push([cx, cy]);
+      matrix[cx][cy] = 0;
+    }
   }
+
+  return count;
 }
 
-function dfs(x, y) {
-  groupCount++;
-  graph[x][y] = 0;
+result.sort((a, b) => (a > b ? 1 : -1));
 
-  for (let [a, b] of [
-    [x, y + 1],
-    [x + 1, y],
-    [x, y - 1],
-    [x - 1, y],
-  ]) {
-    if (a < 0 || a >= n || b < 0 || b >= n) continue;
-    if (!graph[a][b]) continue;
-
-    dfs(a, b);
-  }
-}
-
-group.sort((a, b) => (a > b ? 1 : -1));
-
-console.log(total);
-console.log(group.join("\n"));
+console.log(`${result.length}\n${result.join("\n")}`);

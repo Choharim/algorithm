@@ -1,32 +1,46 @@
-const n = +input.shift().split(" ")[0];
+// 인접 리스트 구현
+const n = Number(input[0].split(" ")[0]);
 
-let graph = Array.from({ length: n + 1 }, () => Array(n + 1).fill(0));
+const adjacentList = {};
 
-for (let i = 0; i < input.length; i++) {
+for (let i = 1; i < input.length; i++) {
   [v1, v2] = input[i].split(" ");
 
-  graph[v1][v2] = 1;
-  graph[v2][v1] = 1;
+  if (!adjacentList[v1]) adjacentList[v1] = [];
+  if (!adjacentList[v2]) adjacentList[v2] = [];
+
+  adjacentList[v1].push(v2);
+  adjacentList[v2].push(v1);
 }
 
-let check = [];
-let count = 0;
-for (let i = 1; i <= n; i++) {
-  if (check[i]) continue;
+// BFS 순회
+function BFS() {
+  const visited = [];
+  let count = 0;
 
-  count++;
-  dfs(i);
-}
+  for (let v = 1; v <= n; v++) {
+    if (visited[v]) continue;
 
-function dfs(vertex) {
-  check[vertex] = 1;
-
-  for (let i = 1; i < graph[vertex].length; i++) {
-    if (!graph[vertex][i]) continue;
-    if (check[i]) continue;
-
-    dfs(i);
+    count++;
+    // 혼자 떨어져 있는 정점의 경우 인접 리스트 key에 존재하지 않는다.
+    if (adjacentList[v]?.length) traverse(v);
   }
-}
 
-console.log(count);
+  function traverse(vertex) {
+    const queue = [vertex];
+    visited[vertex] = 1;
+
+    while (queue.length) {
+      v = queue.shift();
+
+      for (let i = 0; i < adjacentList[v].length; i++) {
+        if (visited[adjacentList[v][i]]) continue;
+
+        queue.push(adjacentList[v][i]);
+        visited[adjacentList[v][i]] = 1;
+      }
+    }
+  }
+
+  return count;
+}
