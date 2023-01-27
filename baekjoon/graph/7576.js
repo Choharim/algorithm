@@ -1,47 +1,47 @@
-const [m, n] = input[0].split(" ");
+const [COULMN, ROW] = input[0].split(" ").map(Number);
 
-let graph = [];
-let temp;
+const box = Array(ROW);
+for (let i = 1; i < input.length; i++) {
+  box[i - 1] = input[i].split(" ").map(Number);
+}
 
-let remainCount = m * n;
-let queue = [];
-for (let i = 0; i < n; i++) {
-  temp = input[i + 1].split(" ").map(Number);
-  graph[i] = temp;
+let count = COULMN * ROW;
+const queue = [];
+let days = 0;
 
-  for (let j = 0; j < m; j++) {
-    if (temp[j] < 0) {
-      remainCount--; // -1 값을 가진 위치의 개수를 빼준다.
+box.forEach((row, x) => {
+  row.forEach((num, y) => {
+    if (num === 1) {
+      queue.push([x, y]);
+      count--; // 처음부터 익은 갯수
+    } else if (num === -1) {
+      count--; // 없는 갯수
     }
-    if (temp[j] == 1) {
-      queue.push([i, j, 0]); // 행,열,익기위해 필요한 날짜
+  });
+});
+
+const dx = [0, 1, 0, -1];
+const dy = [1, 0, -1, 0];
+let idx = 0;
+while (idx < queue.length) {
+  [x, y] = queue[idx];
+  idx++;
+
+  for (let i = 0; i < 4; i++) {
+    const cx = x + dx[i];
+    const cy = y + dy[i];
+
+    if (cx < 0 || cx >= ROW || cy < 0 || cy >= COULMN) continue;
+    if (box[cx][cy] === 0) {
+      count--; // 익혀진 갯수
+      box[cx][cy] = box[x][y] + 1;
+      queue.push([cx, cy]);
     }
+  }
+
+  if (idx === queue.length) {
+    days = box[x][y] - 1; // 마지막 날짜만 저장합니다.
   }
 }
 
-let day = 0;
-let queueIdx = 0;
-while (queueIdx < queue.length) {
-  [x, y, d] = queue[queueIdx];
-  queueIdx++;
-  remainCount--; // 1이상인 값을 가진 위치의 개수를 빼준다.
-
-  day = d + 1;
-
-  for ([a, b] of [
-    [x, y + 1],
-    [x + 1, y],
-    [x, y - 1],
-    [x - 1, y],
-  ]) {
-    if (a < 0 || a >= n || b < 0 || b >= m) continue;
-    if (graph[a][b] === 0) {
-      graph[a][b] = day;
-      queue.push([a, b, day]);
-    }
-  }
-}
-// 상자에 0이 남아있지 않으면 day-1를 리턴한다.
-// day - 1을 해주는 이유는 마지막 dequeue한 후 주변에 익힐 수 있는 토마토가 없으면 while문이 종료하는데
-// for문에 들어가지 않기 때문에 day = d + 1에서 -1을 해주어야 한다.
-console.log(remainCount ? -1 : day - 1);
+console.log(count ? -1 : days);

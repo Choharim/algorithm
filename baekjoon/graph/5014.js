@@ -1,36 +1,31 @@
-const [f, s, g, u, d] = input[0].split(" ").map(Number);
+const [F, S, G, U, D] = input[0].split(" ").map(Number);
 
-function solution() {
-  if (s === g) {
-    return 0;
-  }
+if (S === G) {
+  console.log(0);
+} else {
+  const buttons = [U, -D];
+  const queue = [S];
+  const visited = Array.from({ length: F + 1 });
 
-  const df = [u, -d];
-  let level = 0;
-  let queue = [];
-  let check = [];
-
-  check[s] = 1;
-  queue.push([s, level]);
+  visited[S] = 1;
 
   while (queue.length) {
-    [floor, lv] = queue.shift();
+    floor = queue.shift();
 
-    level = lv + 1;
+    for (let i = 0; i < buttons.length; i++) {
+      const nextFloor = floor + buttons[i];
+      if (nextFloor < 1 || nextFloor > F) continue;
+      if (visited[nextFloor]) continue;
 
-    for (let i = 0; i < df.length; i++) {
-      if (floor + df[i] < 1 || floor + df[i] > f) continue;
-      if (check[floor + df[i]]) continue;
-      if (floor + df[i] === g) {
-        return level;
+      if (nextFloor === G) {
+        console.log(visited[floor]);
+        return;
       }
 
-      check[floor + df[i]] = 1;
-      queue.push([floor + df[i], level]);
+      visited[nextFloor] = visited[floor] + 1;
+      queue.push(nextFloor);
     }
   }
 
-  return "use the stairs";
+  console.log("use the stairs");
 }
-
-console.log(solution());

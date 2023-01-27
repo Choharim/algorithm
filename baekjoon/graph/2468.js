@@ -1,54 +1,56 @@
-const size = +input[0];
-let matrix = [];
-let dx = [0, 1, 0, -1];
-let dy = [1, 0, -1, 0];
-for (let i = 1; i <= size; i++) {
+const n = Number(input[0]);
+
+const matrix = Array.from({ length: n });
+for (let i = 1; i < input.length; i++) {
   matrix[i - 1] = input[i].split(" ").map(Number);
 }
 
-let safeHeight = [];
-let maxCount = 1;
-for (let i = 0; i < size; i++) {
-  for (let j = 0; j < size; j++) {
-    if (safeHeight[matrix[i][j]]) continue;
+let max = 1; // 안전 높이가 1일 때 하나의 그룹이 만들어지므로 최소 1개입니다.
+const heightCheck = Array(101);
+const dx = [0, 1, 0, -1];
+const dy = [1, 0, -1, 0];
+matrix.forEach((row) => {
+  row.forEach((num) => {
+    if (heightCheck[num] || num === 1) return; // max 기본 값을 안전 높이가 1일 때의 그룹 갯수 1로 지정했으므로 높이 1은 기준으로 지정하지 않습니다.
 
-    safeHeight[matrix[i][j]] = 1;
-    maxCount = Math.max(maxCount, start(matrix[i][j]));
-  }
-}
+    heightCheck[num] = traverse(num); // matrix 요소의 값을 기준 높이로 정한 것이므로 최소 그룹의 갯수는 1이다.
+    max = Math.max(max, heightCheck[num]);
+  });
+});
 
-function start(height) {
-  let check = Array.from({ length: size }, () => Array(size).fill(0));
-  let count = 0;
+function traverse(height) {
+  const visited = Array.from({ length: n }, () => Array(n).fill(0));
+  let groupCount = 0;
 
-  function dfs(x, y) {
-    check[x][y] = 1;
+  matrix.forEach((row, x) => {
+    row.forEach((h, y) => {
+      if (h < height || visited[x][y]) return;
 
-    for (let i = 0; i < 4; i++) {
-      if (
-        x + dx[i] < 0 ||
-        x + dx[i] >= size ||
-        y + dy[i] < 0 ||
-        y + dy[i] >= size
-      )
-        continue;
-      if (matrix[x + dx[i]][y + dy[i]] < height || check[x + dx[i]][y + dy[i]])
-        continue;
+      groupCount++;
+      DFS(x, y);
+    });
+  });
 
-      dfs(x + dx[i], y + dy[i]);
+  function DFS(x, y) {
+    const stack = [[x, y]];
+    visited[x][y] = 1;
+
+    while (stack.length) {
+      [a, b] = stack.pop();
+
+      for (let i = 0; i < 4; i++) {
+        const cx = a + dx[i];
+        const cy = b + dy[i];
+        if (cx < 0 || cx >= n || cy < 0 || cy >= n) continue;
+        if (matrix[cx][cy] < height || visited[cx][cy]) continue;
+
+        visited[cx][cy] = 1;
+        stack.push([cx, cy]);
+      }
     }
   }
 
-  for (let i = 0; i < size; i++) {
-    for (let j = 0; j < size; j++) {
-      if (matrix[i][j] < height || check[i][j]) continue;
-
-      count++;
-      dfs(i, j);
-    }
-  }
-
-  return count;
+  return groupCount;
 }
 
-console.log(maxCount);
+console.log(max);
