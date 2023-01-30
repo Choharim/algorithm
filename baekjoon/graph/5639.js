@@ -1,47 +1,51 @@
-let result = [];
-function dfs(start, end) {
-  if (start > end) return;
-  if (start === end) {
-    result.push(input[start]);
+const array = input.map(Number);
+const result = [];
+
+// 재귀 이용
+function DFS(start, end) {
+  if (start > end) {
+    return;
+  } else if (start === end) {
+    result.push(array[start]);
     return;
   }
 
-  let newEnd = end + 1;
+  const root = array[start];
+  let rightStart = end + 1;
+
   for (let i = start + 1; i <= end; i++) {
-    if (input[start] < input[i]) {
-      newEnd = i;
+    if (array[i] > root) {
+      rightStart = i;
       break;
     }
   }
 
-  dfs(start + 1, newEnd - 1);
-  dfs(newEnd, end);
-  result.push(input[start]);
+  DFS(start + 1, rightStart - 1);
+  DFS(rightStart, end);
+
+  result.push(root);
 }
 
-dfs(0, input.length - 1);
+DFS(0, array.length - 1);
 
 console.log(result.join("\n"));
 
-// stack
-// let result = [];
-// let stack = [];
-// stack.push([0, input.length - 1]);
+// Stack 이용
+const stack = [[0, array.length - 1]];
 
-// while (stack.length) {
-//   [start, end] = stack.pop();
+while (stack.length) {
+  [start, end] = stack.pop();
 
-//   let newEnd = end + 1;
-//   for (let i = start + 1; i <= end; i++) {
-//     if (input[start] < input[i]) {
-//       newEnd = i;
-//       break;
-//     }
-//   }
+  result.unshift(array[start]);
 
-//   if (start + 1 <= newEnd - 1) stack.push([start + 1, newEnd - 1]);
-//   if (newEnd <= end) stack.push([newEnd, end]);
+  let rightStart = end + 1;
+  for (let i = start + 1; i <= end; i++) {
+    if (array[start] < array[i]) {
+      rightStart = i;
+      break;
+    }
+  }
 
-//   result.unshift(input[start]);
-// }
-// console.log(result.join("\n"));
+  if (start + 1 <= rightStart - 1) stack.push([start + 1, rightStart - 1]);
+  if (rightStart <= end) stack.push([rightStart, end]);
+}

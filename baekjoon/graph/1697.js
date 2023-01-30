@@ -1,24 +1,28 @@
-const [N, K] = input[0].split(" ").map(Number);
+const [N, K] = input.split(" ").map(Number);
 
-const queue = [N];
-const distance = Array(100000).fill(-1);
-
-distance[N] = 0;
-
-while (queue.length) {
-  x = queue.shift();
-
-  for (let a of [2 * x, x + 1, x - 1]) {
-    if (a < 0 || a > 100000) continue;
-    if (distance[a] > -1) continue;
-
-    if (a === K) {
-      console.log(distance[x] + 1);
-      return;
-    }
-    distance[a] = distance[x] + 1;
-    queue.push(a);
-  }
+if (N === K) {
+  console.log(0);
+  return;
 }
 
-console.log(distance[K]);
+const times = Array.from({ length: 100000 }, () => -1);
+
+const queue = [N];
+times[N] = 0;
+
+while (queue.length) {
+  pos = queue.shift();
+
+  for (let nextPos of [pos + 1, pos - 1, pos * 2]) {
+    if (nextPos < 0 || nextPos > 100000) continue;
+    if (times[nextPos] > -1) continue;
+
+    if (nextPos === K) {
+      console.log(times[pos] + 1);
+      return;
+    }
+
+    queue.push(nextPos);
+    times[nextPos] = times[pos] + 1;
+  }
+}
